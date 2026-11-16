@@ -1,0 +1,7 @@
+data/
+runs/
+__pycache__/
+.pytest_cache/
+train*.log
+yolov8n.pt
+*.zip

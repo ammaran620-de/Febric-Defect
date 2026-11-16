@@ -1,0 +1,75 @@
+{
+  "yolo": {
+    "precision": 0.8866,
+    "recall": 0.8515,
+    "f1": 0.8687,
+    "tp": 86,
+    "fp": 11,
+    "fn": 15
+  },
+  "baseline": {
+    "precision": 0.14,
+    "recall": 0.0693,
+    "f1": 0.0927,
+    "tp": 7,
+    "fp": 43,
+    "fn": 94
+  },
+  "ultralytics_val": {
+    "precision": 0.8172,
+    "recall": 0.8272,
+    "mAP50": 0.88,
+    "mAP50-95": 0.5651
+  },
+  "note": "green=ground truth, red=YOLO prediction in results/errors",
+  "per_class": [
+    {
+      "class": "hole",
+      "precision": 0.791,
+      "recall": 0.825,
+      "map50": 0.839,
+      "map5095": 0.434
+    },
+    {
+      "class": "objects",
+      "precision": 0.753,
+      "recall": 0.83,
+      "map50": 0.861,
+      "map5095": 0.57
+    },
+    {
+      "class": "oil spot",
+      "precision": 0.87,
+      "recall": 0.95,
+      "map50": 0.985,
+      "map5095": 0.778
+    },
+    {
+      "class": "thread error",
+      "precision": 0.854,
+      "recall": 0.704,
+      "map50": 0.835,
+      "map5095": 0.479
+    }
+  ],
+  "class_counts": {
+    "train": {
+      "hole": 89,
+      "objects": 90,
+      "oil spot": 100,
+      "thread error": 108
+    },
+    "val": {
+      "hole": 23,
+      "objects": 33,
+      "oil spot": 20,
+      "thread error": 25
+    }
+  },
+  "images": {
+    "train": 320,
+    "val": 80
+  },
+  "dataset": "TILDA-400 subset",
+  "model": "YOLOv8n (COCO-pretrained, 40 epochs, 416 px)"
+}
