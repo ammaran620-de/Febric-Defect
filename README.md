@@ -50,6 +50,8 @@ Run `uvicorn src.app:app --port 8000` and open http://localhost:8000.
 | Model | mAP, precision/recall, per-class results, precision/recall vs threshold curve, confusion matrix, training curves, limitations |
 | Error review | The validation images the model got wrong |
 
+Themes: Mono (default), Blue and Dark, switchable from the selector at the bottom of the sidebar.
+
 The verdict rule is simple: any detection above the confidence threshold = FAIL. Results are stored in SQLite (`results/inspections.db`, not committed).
 To fill the log with real predictions on the validation images: `python src/seed_history.py data/fabric/images/val`.
 API: `POST /api/inspect` (logged), `POST /predict` (not logged), `GET /api/history`, `GET /api/stats`, `GET /api/history.csv`, interactive docs at `/docs`.
