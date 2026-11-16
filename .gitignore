@@ -5,3 +5,5 @@ __pycache__/
 train*.log
 yolov8n.pt
 *.zip
+results/inspections.db
+results/inspections/

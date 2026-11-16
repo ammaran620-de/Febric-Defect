@@ -38,13 +38,28 @@ Looking at the misses and false alarms in `results/errors/` (green = ground trut
 
 Next steps: train at 640 px or tile large images to help small defects, add more thin-defect examples, and tune the confidence threshold on a separate validation set.
 
-## Dashboard
-Run `uvicorn src.app:app --port 8000` and open http://localhost:8000. Pages: **Overview** (metrics, per-class results, defect mix, YOLO vs baseline), **Live detection** (upload an image or use the webcam, with an adjustable confidence slider) and **Error review** (missed and false-alarm images).
+## Inspection system (dashboard + API)
+Run `uvicorn src.app:app --port 8000` and open http://localhost:8000.
+
+| Page | What it does |
+|---|---|
+| Overview | Inspection KPIs from the log: count, pass rate, defects found, latency, defects per image, pass/fail, defects by class, latest inspections |
+| Inspect | Upload an image: boxes, PASS/FAIL verdict, confidence slider; saved to the log. Webcam live preview (not logged) |
+| Batch | Inspect many images at once with progress and a results table |
+| History | Every inspection with annotated thumbnail, filter by PASS/FAIL, CSV export |
+| Model | mAP, precision/recall, per-class results, precision/recall vs threshold curve, confusion matrix, training curves, limitations |
+| Error review | The validation images the model got wrong |
+
+The verdict rule is simple: any detection above the confidence threshold = FAIL. Results are stored in SQLite (`results/inspections.db`, not committed).
+To fill the log with real predictions on the validation images: `python src/seed_history.py data/fabric/images/val`.
+API: `POST /api/inspect` (logged), `POST /predict` (not logged), `GET /api/history`, `GET /api/stats`, `GET /api/history.csv`, interactive docs at `/docs`.
 
 ![Overview](docs/dashboard-overview.png)
-![Live detection](docs/dashboard-live.png)
+![Inspect](docs/dashboard-inspect.png)
+![History](docs/dashboard-history.png)
+![Model](docs/dashboard-model.png)
 
-Regenerate the summary after retraining: `python src/make_summary.py results/best.pt data/fabric/data.yaml`.
+Regenerate model results after retraining: `python src/evaluate.py ...` then `python src/make_summary.py results/best.pt data/fabric/data.yaml`.
 
 ## Run it
 ```bash

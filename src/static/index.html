@@ -1,8 +1,7 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" href="data:,"><title>Fabric Defect Dashboard</title>
-<style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
+<title>Fabric Inspection System</title><style>
 :root{--tx:#0f2a30;--mut:#5d7a80;--acc:#0f766e;--line:rgba(15,42,48,.10);--card:rgba(255,255,255,.80)}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,Segoe UI,Arial,sans-serif;color:var(--tx);background:linear-gradient(135deg,#2f6670 0%,#4d8a92 55%,#6aa3a8 100%) fixed;min-height:100vh;display:flex}
+html{background:#4d8a92}*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,Segoe UI,Arial,sans-serif;color:var(--tx);background:linear-gradient(135deg,#2f6670 0%,#4d8a92 55%,#6aa3a8 100%);min-height:100vh;display:flex}
 aside{width:210px;padding:20px 14px;background:rgba(255,255,255,.14);border-right:1px solid rgba(255,255,255,.25);position:sticky;top:0;height:100vh;color:#fff}
 aside h1{font-size:15px;margin:0 8px 22px;color:#fff}aside h1 small{color:rgba(255,255,255,.7)}aside a{display:block;padding:9px 12px;border-radius:10px;color:rgba(255,255,255,.8);text-decoration:none;margin-bottom:4px;cursor:pointer}
 aside a.on,aside a:hover{background:rgba(255,255,255,.9);color:var(--tx)}
@@ -21,55 +20,92 @@ button,.btn{background:var(--tx);color:#fff;border:0;border-radius:10px;padding:
 .det{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
 .page{display:none}.page.on{display:block}small{color:var(--mut)}
 @media(max-width:860px){aside{display:none}.two,.live{grid-template-columns:1fr}}
+
+.verdict{font-size:20px;font-weight:700;padding:10px 14px;border-radius:12px;margin-bottom:12px;display:inline-block}.v-PASS{background:#e3eeee;color:var(--tx)}.v-FAIL{background:var(--tx);color:#fff}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px}.p-PASS{background:#e3eeee;color:var(--tx)}.p-FAIL{background:var(--tx);color:#fff}
+.prog{height:8px;background:#e3eeee;border-radius:8px;overflow:hidden;margin:10px 0}.prog div{height:8px;background:var(--acc);width:0}
+.th{width:64px;height:44px;object-fit:cover;border-radius:6px;cursor:pointer;display:block}
+.three{grid-template-columns:repeat(3,1fr);margin-bottom:14px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.step{background:#e9f0f0;border-radius:12px;padding:12px;font-size:13px}.step b{display:block;margin-bottom:4px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9}#modal img{max-width:90vw;max-height:88vh;border-radius:12px}
+select{padding:7px;border-radius:8px;border:1px solid var(--line)}a.link{color:var(--tx);font-weight:600}ul.l{margin:0;padding-left:18px}ul.l li{margin:4px 0}
+@media(max-width:860px){.three,.steps{grid-template-columns:1fr}}
 </style></head><body>
-<aside><h1>Fabric Defect<br><small>YOLOv8 inspection</small></h1>
-<a class="on" data-p="overview">Overview</a><a data-p="live">Live detection</a><a data-p="errors">Error review</a></aside>
+<aside><h1>Fabric Inspection<br><small>YOLOv8 quality control</small></h1>
+<a class="on" data-p="overview">Overview</a><a data-p="inspect">Inspect</a><a data-p="batch">Batch</a><a data-p="history">History</a><a data-p="model">Model</a><a data-p="errors">Error review</a></aside>
 <main>
-<section id="overview" class="page on">
-<h2>Model results</h2><div class="sub" id="meta">Loading…</div>
-<div class="grid kpis" id="kpis"></div>
-<div class="grid two"><div class="card"><h3>Per-class mAP50 (validation)</h3><div id="bars"></div></div>
-<div class="card"><h3>Defect mix (training labels)</h3><div id="donut"></div></div></div>
-<div class="grid two"><div class="card"><h3>YOLO vs OpenCV baseline (IoU 0.5)</h3><table id="cmp"></table></div>
-<div class="card"><h3>Per-class detail</h3><table id="pc"></table></div></div>
-</section>
-<section id="live" class="page"><h2>Live detection</h2><div class="sub">Upload an image or use the webcam. Boxes are drawn from the model's predictions.</div>
-<div class="grid live"><div class="card"><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button>
-<label>Confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv">0.25</span></label></div>
+<section id="overview" class="page on"><h2>Inspection overview</h2><div class="sub" id="meta">Loading…</div>
+<div class="grid kpis" id="kpis"></div><div class="sub" style="color:rgba(255,255,255,.85);margin:-4px 0 14px;font-size:12px">Note: the validation batch contains only images with labelled defects, so a low pass rate here reflects that dataset, not a production line.</div>
+<div class="grid two"><div class="card"><h3>Defects per inspected image (last 40)</h3><div id="spark"></div></div><div class="card"><h3>Pass / fail</h3><div id="pf"></div></div></div>
+<div class="grid two"><div class="card"><h3>Defects found by class</h3><div id="bycls"></div></div><div class="card"><h3>Latest inspections</h3><table id="latest"></table></div></div></section>
+
+<section id="inspect" class="page"><h2>Inspect an image</h2><div class="sub">Upload a fabric image. The result is saved to the inspection log. Use the webcam for a live preview (not logged).</div>
+<div class="grid live"><div class="card"><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>Confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv">0.25</span></label></div>
 <div class="stage"><span class="hint" id="hint">No image yet</span><canvas id="cnv" hidden></canvas><video id="vid" playsinline muted></video></div></div>
-<div class="card"><h3>Detections</h3><div id="dets"><span class="hint">None yet</span></div><p><small id="ms"></small></p></div></div></section>
-<section id="errors" class="page"><h2>Error review</h2><div class="sub">Validation images the model got wrong. Green = ground truth, red = prediction. FN = missed defect, FP = false alarm.</div><div class="grid errs" id="errgrid"></div></section>
-</main>
+<div class="card"><h3>Result</h3><div id="verd"><span class="hint">None yet</span></div><div id="dets"></div><p><small id="ms"></small></p></div></div></section>
+
+<section id="batch" class="page"><h2>Batch inspection</h2><div class="sub">Select many images at once. Each is inspected and logged.</div>
+<div class="card"><div class="row"><input type="file" id="bfiles" accept="image/*" multiple><button id="brun">Run batch</button><a class="link" href="/api/history.csv">Download full log (CSV)</a></div>
+<div class="prog"><div id="bp"></div></div><div id="bsum" class="sub" style="color:var(--mut)"></div><table id="btab"></table></div></section>
+
+<section id="history" class="page"><h2>Inspection history</h2><div class="sub">Every inspection saved by the system.</div>
+<div class="card"><div class="row"><select id="hf"><option value="">All</option><option>PASS</option><option>FAIL</option></select><a class="link" href="/api/history.csv">Download CSV</a></div><table id="htab"></table></div></section>
+
+<section id="model" class="page"><h2>Model performance</h2><div class="sub" id="mmeta"></div>
+<div class="grid kpis" id="mk"></div>
+<div class="grid two"><div class="card"><h3>Precision / recall vs confidence threshold (validation)</h3><div id="sweep"></div></div><div class="card"><h3>YOLO vs OpenCV baseline (IoU 0.5)</h3><table id="cmp"></table><h3 style="margin-top:18px">Per-class</h3><table id="pc"></table></div></div>
+<div class="grid two"><div class="card"><h3>Confusion matrix</h3><img src="/training/confusion_matrix.png" style="width:100%;border-radius:10px"></div><div class="card"><h3>Training curves</h3><img src="/training/results.png" style="width:100%;border-radius:10px"></div></div>
+<div class="card" style="margin-bottom:14px"><h3>How it works</h3><div class="steps"><div class="step"><b>1. Capture</b>Image uploaded or taken from webcam.</div><div class="step"><b>2. Detect</b>YOLOv8n finds defects and classes.</div><div class="step"><b>3. Decide</b>Any defect above the threshold = FAIL.</div><div class="step"><b>4. Log</b>Result and annotated image saved to SQLite; export as CSV.</div></div></div>
+<div class="card"><h3>Limitations</h3><ul class="l"><li>Small public dataset (320 train / 80 validation images), single split and seed, no separate test set.</li><li>Tiny defects and faint thin thread errors are the main misses (see Error review).</li><li>Numbers come from the validation split. Real mill conditions need retraining on local data.</li></ul></div></section>
+
+<section id="errors" class="page"><h2>Error review</h2><div class="sub">Validation images the model got wrong. Green = ground truth, red = prediction.</div><div class="grid errs" id="errgrid"></div></section>
+</main><div id="modal"><img id="mimg"></div>
 <script>
-const $=s=>document.querySelector(s),COL={hole:'#0f766e',objects:'#3b9a92','oil spot':'#7cc0ba','thread error':'#b9dedb'},BOX='#0f766e';
-document.querySelectorAll('aside a').forEach(a=>a.onclick=()=>{document.querySelectorAll('aside a,.page').forEach(e=>e.classList.remove('on'));a.classList.add('on');$('#'+a.dataset.p).classList.add('on')});
-const pct=v=>(v*100).toFixed(1)+'%';
-fetch('/api/summary').then(r=>r.json()).then(d=>{
- $('#meta').textContent=`${d.dataset} · ${d.model} · ${d.images.train} train / ${d.images.val} validation images`;
- const k=[['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['Precision',pct(d.yolo.precision)],['Recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['Missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]];
+const $=s=>document.querySelector(s),pct=v=>(v*100).toFixed(1)+'%',SH=['#0f766e','#3b9a92','#7cc0ba','#b9dedb'],PF=['#0f2a30','#b9dedb'],BOX='#0f766e';
+const go=p=>{document.querySelectorAll('aside a,.page').forEach(e=>e.classList.remove('on'));document.querySelector(`aside a[data-p=${p}]`).classList.add('on');$('#'+p).classList.add('on');if(p==='overview')loadOverview();if(p==='history')loadHistory()};
+document.querySelectorAll('aside a').forEach(a=>a.onclick=()=>go(a.dataset.p));
+$('#modal').onclick=()=>$('#modal').style.display='none';
+const showImg=u=>{$('#mimg').src=u;$('#modal').style.display='flex'};
+const bars=(el,items,max)=>$(el).innerHTML=items.length?items.map(([n,v,l])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${n}</span><span>${l??v}</span></div><div style="background:#e3eeee;border-radius:8px;height:12px"><div style="width:${max?v/max*100:0}%;height:12px;border-radius:8px;background:var(--acc)"></div></div></div>`).join(''):'<span class="hint">No data yet</span>';
+function donut(el,items,pal=SH){const tot=items.reduce((a,b)=>a+b[1],0),R=60,C=2*Math.PI*R;let o=0;
+ const seg=items.map(([n,v],i)=>{const l=tot?v/tot*C:0,s=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="${pal[i%pal.length]}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-o}" transform="rotate(-90 80 80)"/>`;o+=l;return s}).join('');
+ $(el).innerHTML=`<svg viewBox="0 0 160 160" width="150" style="display:block;margin:auto">${seg}<text x="80" y="86" text-anchor="middle" fill="#0f2a30" font-size="20" font-weight="700">${tot}</text></svg><div style="margin-top:8px">${items.map(([n,v],i)=>`<div class="det"><span><span style="color:${pal[i%pal.length]}">●</span> ${n}</span><span>${v}</span></div>`).join('')}</div>`}
+const row=(n,m)=>`<tr><td>${n}</td><td>${pct(m.precision)}</td><td>${pct(m.recall)}</td><td>${m.f1.toFixed(3)}</td></tr>`;
+const pill=v=>`<span class="pill p-${v}">${v}</span>`;
+async function loadOverview(){const [st,sm,h]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=6'].map(u=>fetch(u).then(r=>r.json())));
+ $('#meta').textContent=`${sm.model} · ${sm.dataset} · inspection log: ${st.inspections} images`;
+ const k=[['Inspections',st.inspections],['Pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['Defects found',st.defects],['Avg latency (CPU)',st.avg_ms+' ms'],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['F1',sm.yolo.f1.toFixed(3)]];
  $('#kpis').innerHTML=k.map(x=>`<div class="card kpi"><div class="v">${x[1]}</div><div class="l">${x[0]}</div></div>`).join('');
- $('#bars').innerHTML=d.per_class.map(c=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${c.class}</span><span>${c.map50.toFixed(3)}</span></div><div style="background:#e3eeee;border-radius:8px;height:12px"><div style="width:${c.map50*100}%;height:12px;border-radius:8px;background:var(--acc)"></div></div></div>`).join('');
- const cc=d.class_counts.train,tot=Object.values(cc).reduce((a,b)=>a+b,0);let a0=0;const R=60,C=2*Math.PI*R;
- const seg=Object.entries(cc).map(([n,v])=>{const l=v/tot*C,s=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="${COL[n]||'#888'}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-a0}" transform="rotate(-90 80 80)"/>`;a0+=l;return s}).join('');
- $('#donut').innerHTML=`<svg viewBox="0 0 160 160" width="160" style="display:block;margin:auto">${seg}<text x="80" y="86" text-anchor="middle" fill="#0f2a30" font-size="20" font-weight="700">${tot}</text></svg><div style="margin-top:8px">${Object.entries(cc).map(([n,v])=>`<div class="det"><span><span style="color:${COL[n]}">●</span> ${n}</span><span>${v}</span></div>`).join('')}</div>`;
- const row=(n,m)=>`<tr><td>${n}</td><td>${pct(m.precision)}</td><td>${pct(m.recall)}</td><td>${m.f1.toFixed(3)}</td></tr>`;
- $('#cmp').innerHTML='<tr><th>Method</th><th>Precision</th><th>Recall</th><th>F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
+ const r=st.recent,mx=Math.max(1,...r),w=520,hh=110,bw=w/Math.max(r.length,1);
+ $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+16}" width="100%">${r.map((v,i)=>`<rect x="${i*bw+2}" y="${hh-Math.max(v/mx*hh,4)}" width="${bw-4}" height="${Math.max(v/mx*hh,4)}" rx="3" fill="${v?'#0f766e':'#cfe0e0'}"/>`).join('')}<line x1="0" x2="${w}" y1="${hh}" y2="${hh}" stroke="#cfe0e0"/></svg><small>Grey bar = image with no defect. Max ${mx} per image.</small>`:'<span class="hint">No inspections yet</span>';
+ donut('#pf',[['FAIL',st.failed],['PASS',st.passed]],PF);
+ const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]);bars('#bycls',cl.map(([n,v])=>[n,v]),Math.max(1,...cl.map(x=>x[1])));
+ $('#latest').innerHTML='<tr><th></th><th>File</th><th>Result</th><th>Defects</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td>${x.filename.slice(0,18)}</td><td>${pill(x.verdict)}</td><td>${x.n_defects}</td></tr>`).join('')}
+async function loadHistory(){const v=$('#hf').value,h=await fetch('/api/history?limit=300&verdict='+v).then(r=>r.json());
+ $('#htab').innerHTML='<tr><th></th><th>#</th><th>Time (UTC)</th><th>File</th><th>Source</th><th>Result</th><th>Defects</th><th>Classes</th><th>Max conf</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td>${x.id}</td><td>${x.ts.replace('T',' ').replace('+00:00','')}</td><td>${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${pill(x.verdict)}</td><td>${x.n_defects}</td><td>${x.classes||'–'}</td><td>${x.max_conf||'–'}</td></tr>`).join('')}
+$('#hf').onchange=loadHistory;
+fetch('/api/summary').then(r=>r.json()).then(d=>{
+ $('#mmeta').textContent=`${d.model} · ${d.images.train} train / ${d.images.val} validation images`;
+ $('#mk').innerHTML=[['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['Precision',pct(d.yolo.precision)],['Recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['Missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]].map(x=>`<div class="card kpi"><div class="v">${x[1]}</div><div class="l">${x[0]}</div></div>`).join('');
+ $('#cmp').innerHTML='<tr><th>Method</th><th>P</th><th>R</th><th>F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
  $('#pc').innerHTML='<tr><th>Class</th><th>P</th><th>R</th><th>mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td>${c.precision.toFixed(2)}</td><td>${c.recall.toFixed(2)}</td><td>${c.map50.toFixed(2)}</td></tr>`).join('');
-}).catch(()=>$('#meta').textContent='Could not load results');
-fetch('/api/errors').then(r=>r.json()).then(l=>{$('#errgrid').innerHTML=l.length?l.map(e=>`<div class="card"><img loading="lazy" src="/errors/${e.file}"><span class="badge ${e.kind}">${e.kind==='FN'?'Missed defect':'False alarm'}</span></div>`).join(''):'<span class="hint">No error images found</span>'});
-const cnv=$('#cnv'),ctx=cnv.getContext('2d'),vid=$('#vid');let busy=false,stream=null,timer=null,lastImg=null;
-$('#conf').oninput=e=>{$('#cv').textContent=e.target.value;if(lastImg&&!stream)send(lastImg)};
-function draw(src,d){cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);
- const lw=Math.max(2,d.width/250);ctx.lineWidth=lw;ctx.font=`${Math.max(12,d.width/45)}px sans-serif`;
- d.defects.forEach(x=>{const[b0,b1,b2,b3]=x.box,c=BOX;ctx.strokeStyle=c;ctx.strokeRect(b0,b1,b2-b0,b3-b1);const t=`${x.class} ${x.confidence}`;ctx.fillStyle=c;const fs=Math.max(12,d.width/45),ty=b1-fs-6<0?b1+fs+6:b1-4;ctx.fillRect(b0,ty-fs-2,ctx.measureText(t).width+8,fs+6);ctx.fillStyle='#fff';ctx.fillText(t,b0+4,ty)});
+ const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
+ $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="#cfe0e0"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="#cfe0e0"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="#5d7a80">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="#5d7a80">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>Solid = precision · dashed = recall · dotted = F1. Default threshold 0.25.</small>`});
+fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div class="card"><img loading="lazy" src="/errors/${e.file}" onclick="showImg(this.src)" style="cursor:pointer"><span class="badge ${e.kind}">${e.kind==='FN'?'Missed defect':'False alarm'}</span></div>`).join(''):'<span class="hint">No error images found</span>');
+const cnv=$('#cnv'),ctx=cnv.getContext('2d'),vid=$('#vid');let busy=false,stream=null,timer=null,lastFile=null;
+$('#conf').oninput=e=>{$('#cv').textContent=e.target.value;if(lastFile&&!stream)inspectFile(lastFile)};
+function draw(src,d){cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);const lw=Math.max(2,d.width/250),fs=Math.max(12,d.width/45);ctx.lineWidth=lw;ctx.font=fs+'px sans-serif';
+ d.defects.forEach(x=>{const[a,b,c,e]=x.box,t=`${x.class} ${x.confidence}`;ctx.strokeStyle=BOX;ctx.strokeRect(a,b,c-a,e-b);ctx.fillStyle=BOX;const ty=b-fs-6<0?b+fs+6:b-4;ctx.fillRect(a,ty-fs-2,ctx.measureText(t).width+8,fs+6);ctx.fillStyle='#fff';ctx.fillText(t,a+4,ty)});
+ $('#verd').innerHTML=`<span class="verdict v-${d.defects.length?'FAIL':'PASS'}">${d.defects.length?'FAIL':'PASS'}</span>`;
  $('#dets').innerHTML=d.defects.length?d.defects.map(x=>`<div class="det"><span>${x.class}</span><span>${(x.confidence*100).toFixed(0)}%</span></div>`).join(''):'<span class="hint">No defects found</span>'}
-async function send(blobOrImg){const t0=performance.now();const fd=new FormData();fd.append('file',blobOrImg,'f.jpg');
- const r=await fetch('/predict?conf='+$('#conf').value,{method:'POST',body:fd});if(!r.ok){$('#dets').textContent='Error: '+(await r.text());return}
- const d=await r.json();$('#ms').textContent=Math.round(performance.now()-t0)+' ms round trip';return d}
-$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;stopCam();lastImg=f;const d=await send(f);if(!d)return;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)};
+async function post(url,blob){const fd=new FormData();fd.append('file',blob,blob.name||'frame.jpg');const r=await fetch(url,{method:'POST',body:fd});if(!r.ok)throw new Error(await r.text());return r.json()}
+async function inspectFile(f){stopCam();lastFile=f;try{const t0=performance.now(),d=await post('/api/inspect?conf='+$('#conf').value+'&source=upload',f);$('#ms').textContent=`Model ${d.ms} ms · saved as inspection #${d.id}`;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)}catch(e){$('#dets').textContent='Error: '+e.message}}
+$('#file').onchange=e=>e.target.files[0]&&inspectFile(e.target.files[0]);
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;clearInterval(timer);$('#cam').textContent='Start webcam'}}
-$('#cam').onclick=async()=>{if(stream)return stopCam();try{stream=await navigator.mediaDevices.getUserMedia({video:true});}catch(e){$('#dets').textContent='Webcam not available';return}
+$('#cam').onclick=async()=>{if(stream)return stopCam();try{stream=await navigator.mediaDevices.getUserMedia({video:true})}catch(e){$('#dets').textContent='Webcam not available';return}
  vid.srcObject=stream;await vid.play();$('#cam').textContent='Stop webcam';
- timer=setInterval(async()=>{if(busy||!vid.videoWidth)return;busy=true;const c=document.createElement('canvas');c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext('2d').drawImage(vid,0,0);
-  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));const d=await send(blob);if(d)draw(c,d);busy=false},600)};
+ timer=setInterval(async()=>{if(busy||!vid.videoWidth)return;busy=true;try{const c=document.createElement('canvas');c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext('2d').drawImage(vid,0,0);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));const d=await post('/predict?conf='+$('#conf').value,b);draw(c,d)}catch(e){}busy=false},600)};
+$('#brun').onclick=async()=>{const fs=[...$('#bfiles').files];if(!fs.length)return;$('#btab').innerHTML='<tr><th>File</th><th>Result</th><th>Defects</th><th>ms</th></tr>';let f=0;
+ for(let i=0;i<fs.length;i++){try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=batch',fs[i]);if(d.verdict==='FAIL')f++;$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name.slice(0,30)}</td><td>${pill(d.verdict)}</td><td>${d.defects.length}</td><td>${d.ms}</td></tr>`)}catch(e){$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name}</td><td colspan=3>error</td></tr>`)}
+  $('#bp').style.width=((i+1)/fs.length*100)+'%';$('#bsum').textContent=`${i+1}/${fs.length} done · ${f} failed · ${i+1-f} passed`}};
+loadOverview();
 </script></body></html>
