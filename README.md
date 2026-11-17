@@ -319,7 +319,9 @@ docker run -p 8000:8000 fabric-defect
 
 **Model.** See the metrics behind the detector, including the per-class table and the confidence sweep, so the threshold can be chosen deliberately.
 
-**Seed the history with real predictions.** To fill the dashboard with genuine model output instead of an empty log:
+**Demo data.** On first start the dashboard loads a bundled log of 80 real predictions on the validation split (`results/demo/`), so the Overview and History pages are not empty. It is copied to `results/inspections.db`, which is yours to add to or delete (delete it to reload the demo data). The demo thumbnails derive from TILDA, see [licence note](#18-dataset-licence-and-credits).
+
+**Re-generate the demo data.** To rebuild a log from your own folder of images:
 
 ```bash
 python src/seed_history.py data/tilda/images/val --source "validation batch"

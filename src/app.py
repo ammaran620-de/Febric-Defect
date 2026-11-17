@@ -20,7 +20,18 @@ def model():
     if _model is None: _model = YOLO(os.environ.get("MODEL_PATH", str(ROOT/"results"/"best.pt")))
     return _model
 
+DEMO = ROOT/"results"/"demo"
+
+def _seed_demo():
+    """First start only: copy the bundled demo log (real predictions on the validation split) if no log exists yet."""
+    if "DB_PATH" in os.environ or DB.exists() or not (DEMO/"inspections.db").exists(): return
+    import shutil
+    DB.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(DEMO/"inspections.db", DB)
+    if (DEMO/"inspections").is_dir(): shutil.copytree(DEMO/"inspections", THUMBS, dirs_exist_ok=True)
+
 def db():
+    _seed_demo()
     DB.parent.mkdir(parents=True, exist_ok=True); THUMBS.mkdir(parents=True, exist_ok=True)
     c = sqlite3.connect(DB); c.row_factory = sqlite3.Row
     c.execute("""CREATE TABLE IF NOT EXISTS inspections(id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT, source TEXT, filename TEXT,
@@ -28,6 +39,7 @@ def db():
     return c
 
 def decode(data):
+    if len(data) > 15_000_000: raise HTTPException(413, "Image too large (max 15 MB)")
     img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
     if img is None: raise HTTPException(400, "Not a valid image")
     return img
