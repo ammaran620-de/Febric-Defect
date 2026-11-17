@@ -13,6 +13,8 @@
 
 </div>
 
+**Live demo (no install):** https://ammaran620-de.github.io/Febric-Defect/ — the detector runs in your browser, so you can upload a fabric image and get a verdict straight away.
+
 ![Dashboard overview](docs/dashboard-overview.png)
 
 ---
@@ -250,6 +252,16 @@ Febric-Defect/
 ## 8. Getting started
 
 **Requirements:** Python 3.10 or newer and about 1 GB of free disk space for dependencies. No GPU is needed.
+
+### 8.0 Live demo on GitHub Pages
+
+The `docs/` folder is a static build of the dashboard that runs the model **in the browser** with ONNX Runtime Web (WebAssembly). Nothing is uploaded: images stay on your device. Open https://ammaran620-de.github.io/Febric-Defect/ and use Inspect, Batch or the webcam.
+
+- The inspection log starts with the 80 bundled validation predictions and resets on reload.
+- The first inspection takes a second or two while the 12 MB model loads. After that, inference took about 125 ms per image in headless Chrome on a 2-core CPU, single-threaded.
+- **Checked against the Python model** on all 80 validation images: the same PASS/FAIL verdict on 80 of 80, 97 boxes against 97, and 96 of 97 boxes matching at IoU above 0.9. The browser version is a re-implementation of the pre- and post-processing, so tiny confidence differences are possible.
+- Rebuild it after retraining: export the model with `yolo export model=results/best.pt format=onnx imgsz=416 opset=12 dynamic=True simplify=True`, then run `python src/build_static.py` (it needs the `onnxruntime-web` npm package for the runtime files).
+- To publish: repository **Settings, Pages, Deploy from a branch, `main`, folder `/docs`**.
 
 ### 8.1 Windows (cmd)
 

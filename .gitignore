@@ -7,3 +7,5 @@ yolov8n.pt
 *.zip
 results/inspections.db
 results/inspections/
+
+results/best.onnx
