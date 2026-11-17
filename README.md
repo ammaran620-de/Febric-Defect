@@ -70,7 +70,7 @@ On Windows, `run.bat` does the same. Then open http://localhost:8000. Run the te
 
 ## Data and licences
 
-The code is MIT. The images come from the TILDA textile database through a public subset that states no licence, so the dataset and the screenshots that show it are **not** covered by the MIT licence. YOLOv8 comes from Ultralytics (AGPL-3.0). The Archivo font used by the dashboard is under the SIL Open Font License 1.1 (notice in `docs/fonts/OFL.txt`).
+The code is MIT. The images come from the TILDA textile database through a public subset that states no licence, so the dataset and the screenshots that show it are **not** covered by the MIT licence. YOLOv8 comes from Ultralytics (AGPL-3.0), and the bundled weights are derived from it, so they are not MIT either. `THIRD_PARTY_NOTICES.md` lists each item and one open licensing question. The Archivo font used by the dashboard is under the SIL Open Font License 1.1 (notice in `docs/fonts/OFL.txt`).
 
 ## Author
 
