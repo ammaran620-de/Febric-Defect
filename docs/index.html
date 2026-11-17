@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
 <title>Fabric defect inspection</title><style>
-:root{--page:#ffffff;--tx:#1b1b1b;--mut:#6a6a66;--line:#d9d9d4;--soft:#f3f3f0;--soft2:#f7f7f5;--acc:#c4321f;--mono:ui-monospace,"SF Mono",Consolas,Menlo,"Liberation Mono",monospace}
+:root{--page:#0e1013;--tx:#e8eaed;--mut:#8b929c;--line:#272c34;--soft:#1d2128;--soft2:#14171c;--acc:#ff5a45;--mono:ui-monospace,"SF Mono",Consolas,Menlo,"Liberation Mono",monospace}
 *{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--tx);background:var(--page)}
-header{display:flex;align-items:baseline;gap:28px;padding:14px 28px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+header{display:flex;align-items:baseline;gap:28px;padding:14px 32px 0;border-bottom:1px solid var(--line);background:var(--soft2);flex-wrap:wrap}
 header .id{font:600 14px var(--mono);margin-right:6px}header .id small{font-weight:400;color:var(--mut);margin-left:10px}
 nav{display:flex;gap:22px;margin-bottom:-1px}nav a{padding:8px 0;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;text-decoration:none}
 nav a:hover{color:var(--tx)}nav a.on{color:var(--tx);border-bottom-color:var(--tx)}
-main{padding:22px 28px 60px;max-width:1180px}h2{font-size:17px;margin:0 0 2px;font-weight:600}.sub{color:var(--mut);margin-bottom:18px;font-size:13px}
+main{padding:24px 32px 60px}h2{font-size:17px;margin:0 0 2px;font-weight:600}.sub{color:var(--mut);margin-bottom:18px;font-size:13px}
 h3{margin:0 0 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);font-weight:600}
 .grid{display:grid;gap:28px}.two{grid-template-columns:1fr 1fr;margin-bottom:26px}.live{grid-template-columns:1fr 300px}.three{grid-template-columns:repeat(3,1fr)}
 .sec{border-top:1px solid var(--line);padding-top:12px}
@@ -14,33 +14,41 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,t
 th{color:var(--mut);font-weight:500;font-size:12px}td.n,th.n{text-align:right;font-family:var(--mono)}td{font-size:13px}
 .kv td:first-child{color:var(--mut)}.kv td:last-child{text-align:right;font-family:var(--mono)}
 .mono{font-family:var(--mono)}.hint,small{color:var(--mut)}
-button,.btn{font:inherit;background:var(--tx);color:#fff;border:1px solid var(--tx);border-radius:2px;padding:6px 14px;cursor:pointer}button.alt{background:#fff;color:var(--tx);border-color:var(--line)}button:hover{opacity:.88}
-input[type=file]{font:inherit;font-size:13px}select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--tx)}
+button,.btn{font:inherit;background:var(--tx);color:var(--page);border:1px solid var(--tx);border-radius:2px;padding:6px 14px;cursor:pointer}button.alt{background:transparent;color:var(--tx);border-color:var(--line)}button:hover{opacity:.88}
+input[type=file]{font:inherit;font-size:13px}select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:2px;background:var(--soft);color:var(--tx)}
 input[type=range]{accent-color:var(--tx)}a.link{color:var(--tx);text-decoration:underline;text-underline-offset:3px}
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-.stage{background:var(--soft2);border:1px solid var(--line);min-height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage canvas{width:100%;height:auto;display:block}.stage video{display:none}
+.stage{background:var(--soft2);border:1px solid var(--line);min-height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage canvas{max-width:100%;max-height:560px;width:auto;height:auto;display:block}.stage video{display:none}
 .det{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line);font-size:13px}.det span:last-child{font-family:var(--mono)}
-.page{display:none}.page.on{display:block}
+[hidden]{display:none!important}.page{display:none}.page.on{display:block}
 .v{font:600 12px var(--mono);letter-spacing:.03em}.v.FAIL{color:var(--acc)}.v.PASS{color:var(--mut)}
 .verdict{font:600 26px var(--mono);display:block;margin:2px 0 10px}.v-FAIL{color:var(--acc)}.v-PASS{color:var(--tx)}
 .prog{height:3px;background:var(--soft);margin:10px 0}.prog div{height:3px;background:var(--tx);width:0}
 .th{width:60px;height:42px;object-fit:cover;cursor:pointer;display:block;border:1px solid var(--line)}
-.bar{height:3px;background:var(--soft);min-width:80px}.bar i{display:block;height:3px;background:var(--tx)}
+.bar{height:4px;background:var(--soft);min-width:80px}.bar i{display:block;height:4px;background:var(--acc)}
 .errs{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}.errs img{width:100%;display:block;border:1px solid var(--line);cursor:pointer}
 .errs span{display:block;font:12px var(--mono);margin-top:4px}.errs .FN{color:var(--acc)}.errs .FP{color:var(--mut)}
 ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:5px 0}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:9}#modal img{max-width:90vw;max-height:88vh}
-.note{border-left:2px solid var(--tx);padding:2px 0 2px 12px;margin:0 0 22px;font-size:13px;color:var(--tx)}
+.note{border-left:2px solid var(--acc);padding:2px 0 2px 12px;margin:0 0 22px;font-size:13px;color:var(--tx)}
 @media(max-width:860px){.two,.live,.three{grid-template-columns:1fr}header{padding:12px 16px 0}main{padding:18px 16px}}
+.strip{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);background:var(--soft2);margin-bottom:10px}
+.strip>div{padding:20px 22px;border-right:1px solid var(--line)}.strip>div:last-child{border-right:0}
+.strip b{display:block;font:600 38px/1.1 var(--mono);letter-spacing:-.02em}.strip span{display:block;margin-top:6px;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.panel{border:1px solid var(--line);background:var(--soft2);padding:16px 20px}.hero{grid-template-columns:1.5fr 1fr;margin-bottom:28px}
+.herobox{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}.herobox img{width:480px;max-width:100%;display:block;border:1px solid var(--line);cursor:pointer}.herobox .kv{flex:1;min-width:220px}
+@media(max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}}
 </style></head><body>
 <header><div class="id">fabric-defect<small>yolov8n · tilda-400 subset</small></div>
 <nav><a class="on" data-p="overview">Overview</a><a data-p="inspect">Inspect</a><a data-p="batch">Batch</a><a data-p="history">History</a><a data-p="model">Model</a><a data-p="errors">Errors</a></nav></header>
 <main><div class="note"><b>Static demo.</b> The detector runs in your browser (ONNX Runtime Web), so images stay on your device. The log starts with 80 real validation predictions and resets on reload. <a class="link" href="https://github.com/ammaran620-de/Febric-Defect">Source</a></div>
 <section id="overview" class="page on"><h2>Overview</h2><div class="sub" id="meta">Loading…</div>
-<div class="grid two"><div><h3>Validation, conf 0.25</h3><table class="kv" id="kpis"></table></div><div><h3>Inspection log</h3><table class="kv" id="kpis2"></table></div></div>
-<div class="sub" style="margin:-10px 0 22px;font-size:12px">The validation images all contain labelled defects, so a low pass rate here describes the data, not a production line.</div>
-<div class="grid two"><div class="sec"><h3>Defects per image, last 40</h3><div id="spark"></div></div><div class="sec"><h3>Verdicts</h3><div id="pf"></div></div></div>
-<div class="grid two"><div class="sec"><h3>Defects found by class</h3><table id="bycls"></table></div><div class="sec"><h3>Latest</h3><table id="latest"></table></div></div></section>
+<div class="strip" id="strip"></div>
+<div class="sub" style="font-size:12px;margin-bottom:24px">Validation numbers at conf 0.25. The validation images all contain labelled defects, so the low pass rate describes the data, not a production line.</div>
+<div class="grid hero"><div class="panel"><h3>Latest inspection</h3><div id="hero"></div></div>
+<div class="panel"><h3>Verdicts</h3><div id="pf"></div><h3 style="margin-top:24px">Defects by class</h3><table id="bycls"></table></div></div>
+<div class="panel" style="margin-bottom:28px"><h3>Defects per image, last 40</h3><div id="spark"></div></div>
+<div class="panel"><h3>Latest</h3><table id="latest"></table></div></section>
 
 <section id="inspect" class="page"><h2>Inspect an image</h2><div class="sub">Upload a fabric image. The result goes into the inspection log. The webcam preview is not logged.</div>
 <div class="grid live"><div><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv" class="mono">0.25</span></label></div>
@@ -56,10 +64,8 @@ ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:5px 0}
 
 <section id="model" class="page"><h2>Model</h2><div class="sub" id="mmeta"></div>
 <div class="grid two"><div><h3>Validation metrics</h3><table class="kv" id="mk"></table></div><div><h3>YOLOv8n vs OpenCV baseline, IoU 0.5</h3><table id="cmp"></table><h3 style="margin-top:20px">Per class</h3><table id="pc"></table></div></div>
-<div class="sec" style="margin-bottom:26px"><h3>Precision / recall vs confidence threshold</h3><div id="sweep"></div></div>
-<div class="grid two"><div class="sec"><h3>Confusion matrix</h3><img src="training/confusion_matrix.png" style="width:100%"></div><div class="sec"><h3>Training curves</h3><img src="training/results.png" style="width:100%"></div></div>
-<div class="grid two"><div class="sec"><h3>Pipeline</h3><ol class="l"><li>Image in (upload or webcam frame).</li><li>YOLOv8n returns boxes and classes.</li><li>Any box at or above the threshold means FAIL.</li><li>Verdict and annotated thumbnail go to SQLite.</li></ol></div>
-<div class="sec"><h3>Limits</h3><ul class="l"><li>320 train / 80 validation images, one split, one seed. No separate test set.</li><li>Misses are mostly tiny defects and faint thread errors.</li><li>Numbers are validation-split numbers. A real mill needs local data and retraining.</li></ul></div></div></section>
+<div class="grid two"><div class="panel"><h3>Precision / recall vs confidence threshold</h3><div id="sweep"></div></div><div class="panel"><h3>Confusion matrix</h3><img src="training/confusion_matrix.png" style="width:100%;max-height:420px;object-fit:contain;background:#fff"></div></div>
+<div class="grid two"><div class="panel"><h3>Training curves</h3><img src="training/results.png" style="width:100%;background:#fff"></div><div class="panel"><h3>Pipeline</h3><ol class="l"><li>Image in (upload or webcam frame).</li><li>YOLOv8n returns boxes and classes.</li><li>Any box at or above the threshold means FAIL.</li><li>Verdict and annotated thumbnail go to SQLite.</li></ol><h3 style="margin-top:22px">Limits</h3><ul class="l"><li>320 train / 80 validation images, one split, one seed. No separate test set.</li><li>Misses are mostly tiny defects and faint thread errors.</li><li>Numbers are validation-split numbers. A real mill needs local data and retraining.</li></ul></div></div></section>
 
 <section id="errors" class="page"><h2>Errors</h2><div class="sub">Validation images the model got wrong. Green box = ground truth, red = prediction.</div>
 <div class="grid two"><div class="sec"><h3>What went wrong</h3><ul class="l"><li>15 missed defects and 11 false alarms out of 101 labelled defects, spread over 19 images.</li><li>Lowest recall: thread error 0.70. Lowest precision: objects 0.75, hole 0.79.</li><li>Raising the threshold to 0.55 gives precision 0.97 at recall 0.64, so misses and false alarms trade off directly.</li></ul></div>
@@ -78,15 +84,16 @@ const kv=rows=>rows.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')
 const bars=(el,items,max)=>$(el).innerHTML=items.length?items.map(([n,v])=>`<tr><td>${n}</td><td style="width:45%"><div class="bar"><i style="width:${max?v/max*100:0}%"></i></div></td><td class="n">${v}</td></tr>`).join(''):'<tr><td class="hint">no data yet</td></tr>';
 const row=(n,m)=>`<tr><td>${n}</td><td class="n">${pct(m.precision)}</td><td class="n">${pct(m.recall)}</td><td class="n">${m.f1.toFixed(3)}</td></tr>`;
 const pill=v=>`<span class="v ${v}">${v}</span>`;
-async function loadOverview(){const [st,sm,h]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=6'].map(u=>fetch(u).then(r=>r.json())));
+async function loadOverview(){const [st,sm,h]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=8'].map(u=>fetch(u).then(r=>r.json())));
  $('#meta').textContent=`${sm.model} · ${sm.dataset} · ${st.inspections} images in the log`;
- $('#kpis').innerHTML=kv([['precision',pct(sm.yolo.precision)],['recall',pct(sm.yolo.recall)],['F1',sm.yolo.f1.toFixed(3)],['TP / FP / FN',`${sm.yolo.tp} / ${sm.yolo.fp} / ${sm.yolo.fn}`],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',sm.ultralytics_val['mAP50-95'].toFixed(3)]]);
- $('#kpis2').innerHTML=kv([['inspections',st.inspections],['pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['defects found',st.defects],['avg latency, CPU',st.avg_ms+' ms']]);
+ $('#strip').innerHTML=[['F1',sm.yolo.f1.toFixed(3)],['precision',pct(sm.yolo.precision)],['recall',pct(sm.yolo.recall)],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['avg latency, CPU',st.avg_ms+' ms']].map(x=>`<div><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');
+ const x=h.find(v=>v.n_defects>0)||h[0];
+ $('#hero').innerHTML=x?`<div class="herobox"><img src="${THUMB(x.id)}" onclick="showImg(this.src)"><table class="kv">${kv([['file',x.filename.slice(0,20)],['verdict',pill(x.verdict)],['defects',x.n_defects],['classes',x.classes||'–'],['top confidence',x.max_conf||'–'],['model time',x.ms?x.ms+' ms':'–']])}</table></div>`:'<span class="hint">no inspections yet</span>';
  const r=st.recent,mx=Math.max(1,...r),w=520,hh=100,bw=w/Math.max(r.length,1);
- $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+4}" width="100%">${r.map((v,i)=>`<rect x="${i*bw+1}" y="${hh-Math.max(v/mx*hh,3)}" width="${bw-2}" height="${Math.max(v/mx*hh,3)}" fill="${v?'#1b1b1b':'#c9c9c4'}"/>`).join('')}<line x1="0" x2="${w}" y1="${hh}" y2="${hh}" stroke="#d9d9d4"/></svg><small>Short grey bar = no defect. Tallest = ${mx} per image.</small>`:'<span class="hint">no inspections yet</span>';
- $('#pf').innerHTML=`<table class="kv">${kv([['FAIL',st.failed],['PASS',st.passed]])}</table>`;
+ $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+4}" width="100%" preserveAspectRatio="none" style="height:110px;display:block">${r.map((v,i)=>`<rect x="${i*bw+1}" y="${hh-Math.max(v/mx*hh,3)}" width="${bw-2}" height="${Math.max(v/mx*hh,3)}" fill="${v?'var(--tx)':'var(--line)'}"/>`).join('')}</svg><small>Short grey bar = no defect. Tallest = ${mx} per image.</small>`:'<span class="hint">no inspections yet</span>';
+ $('#pf').innerHTML=`<table class="kv">${kv([['FAIL',st.failed],['PASS',st.passed],['pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['defects found',st.defects]])}</table>`;
  const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]);bars('#bycls',cl,Math.max(1,...cl.map(x=>x[1])));
- $('#latest').innerHTML='<tr><th></th><th>file</th><th>verdict</th><th class="n">n</th></tr>'+h.map(x=>`<tr><td><img class="th" src="${THUMB(x.id)}" onclick="showImg(this.src)"></td><td class="mono">${x.filename.slice(0,16)}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td></tr>`).join('')}
+ $('#latest').innerHTML='<tr><th></th><th>file</th><th>verdict</th><th class="n">n</th></tr>'+h.map(x=>`<tr><td><img class="th" src="${THUMB(x.id)}" onclick="showImg(this.src)"></td><td class="mono">${x.filename.slice(0,22)}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td></tr>`).join('')}
 async function loadHistory(){const v=$('#hf').value,h=await fetch('/api/history?limit=300&verdict='+v).then(r=>r.json());
  $('#htab').innerHTML='<tr><th></th><th class="n">#</th><th>time (UTC)</th><th>file</th><th>source</th><th>verdict</th><th class="n">n</th><th>classes</th><th class="n">max conf</th></tr>'+h.map(x=>`<tr><td><img class="th" src="${THUMB(x.id)}" onclick="showImg(this.src)"></td><td class="n">${x.id}</td><td class="mono">${x.ts.replace('T',' ').replace('+00:00','')}</td><td class="mono">${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td><td>${x.classes||'–'}</td><td class="n">${x.max_conf||'–'}</td></tr>`).join('')}
 $('#hf').onchange=loadHistory;
@@ -95,8 +102,8 @@ fetch('/api/summary').then(r=>r.json()).then(d=>{
  $('#mk').innerHTML=kv([['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['precision',pct(d.yolo.precision)],['recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]]);
  $('#cmp').innerHTML='<tr><th>method</th><th class="n">P</th><th class="n">R</th><th class="n">F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
  $('#pc').innerHTML='<tr><th>class</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td class="n">${c.precision.toFixed(2)}</td><td class="n">${c.recall.toFixed(2)}</td><td class="n">${c.map50.toFixed(2)}</td></tr>`).join('');
- const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="#1b1b1b" stroke-width="2" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
- $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%" style="max-width:640px"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="#d9d9d4"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="#d9d9d4"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="#6a6a66">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="#6a6a66">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>solid precision · dashed recall · dotted F1. Default threshold 0.25.</small>`});
+ const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="var(--tx)" stroke-width="2" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
+ $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="var(--line)"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="var(--mut)">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="var(--mut)">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>solid precision · dashed recall · dotted F1. Default threshold 0.25.</small>`});
 fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div><img loading="lazy" src="errors/${e.file}" onclick="showImg(this.src)"><span class="${e.kind}">${e.kind==='FN'?'missed defect':'false alarm'}</span></div>`).join(''):'<span class="hint">no error images found</span>');
 const cnv=$('#cnv'),ctx=cnv.getContext('2d'),vid=$('#vid');let busy=false,stream=null,timer=null,lastFile=null;
 $('#conf').oninput=e=>{$('#cv').textContent=e.target.value;if(lastFile&&!stream)inspectFile(lastFile)};

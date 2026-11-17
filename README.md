@@ -127,7 +127,7 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 </tr>
 </table>
 
-The UI is deliberately flat and monochrome, so defect boxes and FAIL verdicts are the only colour on screen.
+The UI is a flat dark console with one accent colour, used only for FAIL verdicts and defect boxes.
 
 
 ---
