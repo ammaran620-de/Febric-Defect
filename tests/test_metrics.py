@@ -97,10 +97,28 @@ def test_match_boxes_is_the_class_agnostic_helper():
 
 def test_prf_handles_zero_denominators():
     assert prf(0, 0, 0) == {"precision": 0.0, "recall": 0.0, "f1": 0.0, "tp": 0, "fp": 0, "fn": 0}
-    assert prf(86, 11, 15)["f1"] == 0.8687
+    assert prf(86, 11, 15)["f1"] == pytest.approx(172 / 198, abs=1e-6)
 
 
 def test_class_name_mismatch_is_rejected():
     check_class_names({0: "hole", 1: "oil"}, {0: "hole", 1: "oil"})
     with pytest.raises(ValueError):
         check_class_names({0: "hole", 1: "oil"}, {0: "hole", 1: "stain"})
+
+
+def test_prf_is_not_rounded_before_display():
+    # 86/101 is 0.851485: rounding to four places first (0.8515) and again to three gave 0.852.
+    r = prf(86, 11, 15)
+    assert r["recall"] == pytest.approx(86 / 101, abs=1e-6)
+    assert f"{r['recall']:.3f}" == "0.851"
+    assert f"{prf(84, 13, 17)['f1']:.3f}" == "0.848"
+
+
+def test_stored_summary_matches_its_own_counts():
+    import json
+    s = json.loads((Path(__file__).parents[1] / "results" / "summary.json").read_text(encoding="utf-8"))
+    rows = [s["yolo"], s["baseline"], s["yolo_class_aware"], *s["sweep"]]
+    for row in rows:
+        expect = prf(row["tp"], row["fp"], row["fn"])
+        for key in ("precision", "recall", "f1"):
+            assert row[key] == pytest.approx(expect[key], abs=1e-6), (row.get("conf"), key)
