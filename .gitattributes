@@ -1,2 +1,6 @@
+# Third-party runtime bundled for the Pages demo (ONNX Runtime Web).
 docs/vendor/** linguist-vendored=true
-docs/** linguist-generated=true
+# Binary or rendered outputs, not hand-written source.
+docs/model/** linguist-generated=true
+docs/demo/** linguist-generated=true
+docs/diagrams/*.png linguist-generated=true
