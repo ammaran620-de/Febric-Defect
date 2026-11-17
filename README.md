@@ -85,12 +85,15 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 **Service**
 - FastAPI backend with a documented REST API and automatic OpenAPI docs at `/docs`
 - Every logged inspection stores verdict, classes, confidence, latency, threshold and boxes
-- Annotated 480 px thumbnails saved per inspection
+- Annotated 800 px thumbnails saved per inspection
 - CSV export of the full inspection history
 - Health endpoint for container orchestration
 
 **Dashboard**
 - Six pages: Overview, Inspect, Batch, History, Model, Error review
+- Three themes: Light, Blue and Dark
+- Overview shows six summary cards, defects per image for the last 40 inspections, the pass and fail split, defects by class, and the latest results
+- Annotated thumbnails are 800 px wide and open full size on click
 - Live webcam preview with bounding boxes, plus single-image and batch upload
 - Charts drawn with inline SVG, so there are no front-end dependencies and no build step
 
@@ -127,7 +130,7 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 </tr>
 </table>
 
-Three themes (Light, Blue, Dark) share one token system. Pixel rulers in source coordinates frame each photo, one red is used only for defects and FAIL, and a single variable font (Archivo) carries all the type.
+Three themes (Light, Blue and Dark) switch from the circles at the bottom of the sidebar, and the choice is remembered. Red is used only for defects and FAIL. Click any thumbnail to open it full size.
 
 ![Light, Blue and Dark themes](docs/themes.png)
 
