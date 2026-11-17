@@ -4,7 +4,7 @@
 
 **YOLOv8n defect detection for textile images, with a FastAPI service, an audit log and a dashboard.**
 
-[Live demo](https://ammaran620-de.github.io/Febric-Defect/) · [Full write-up](docs/README_full.md) · [Architecture](docs/ARCHITECTURE.md)
+[Live demo](https://ammaran620-de.github.io/Febric-Defect/docs/) · [Full write-up](docs/README_full.md) · [Architecture](docs/ARCHITECTURE.md)
 
 </div>
 

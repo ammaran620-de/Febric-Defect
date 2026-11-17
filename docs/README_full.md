@@ -15,7 +15,7 @@
 
 </div>
 
-**Live demo (no install):** https://ammaran620-de.github.io/Febric-Defect/ — the detector runs in your browser, so you can upload a fabric image and get a verdict straight away.
+**Live demo (no install):** https://ammaran620-de.github.io/Febric-Defect/docs/ — the detector runs in your browser, so you can upload a fabric image and get a verdict straight away.
 
 ![Dashboard overview](dashboard-overview.png)
 
@@ -260,7 +260,7 @@ Febric-Defect/
 
 ### 8.0 Live demo on GitHub Pages
 
-The `docs/` folder is a static build of the dashboard that runs the model **in the browser** with ONNX Runtime Web (WebAssembly). Nothing is uploaded: images stay on your device. Open https://ammaran620-de.github.io/Febric-Defect/ and use Inspect, Batch or the webcam.
+The `docs/` folder is a static build of the dashboard that runs the model **in the browser** with ONNX Runtime Web (WebAssembly). Nothing is uploaded: images stay on your device. Open https://ammaran620-de.github.io/Febric-Defect/docs/ and use Inspect, Batch or the webcam.
 
 - The inspection log starts with the 80 bundled validation predictions and resets on reload.
 - The first inspection takes a second or two while the 12 MB model loads. After that, inference took about 125 ms per image in headless Chrome on a 2-core CPU, single-threaded.
