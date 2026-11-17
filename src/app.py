@@ -45,7 +45,8 @@ def decode(data):
     return img
 
 def run(img, conf):
-    t0 = time.perf_counter(); r = model().predict(img, conf=conf, verbose=False)[0]
+    m = model()  # lazy load happens here, outside the timed region
+    t0 = time.perf_counter(); r = m.predict(img, conf=conf, verbose=False)[0]
     ms = (time.perf_counter()-t0)*1000
     return [{"box": [round(v, 1) for v in b], "confidence": round(c, 3), "class": r.names[int(k)]}
             for b, c, k in zip(r.boxes.xyxy.tolist(), r.boxes.conf.tolist(), r.boxes.cls.tolist())], ms

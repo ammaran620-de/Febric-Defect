@@ -48,6 +48,7 @@ On Windows, `run.bat` does the same. Then open http://localhost:8000. Run the te
 
 ## Limits
 
+- **Timing.** The model time shown for each inspection is the duration of the `predict` call only. The first inspection after the server starts is much slower because of one-time initialisation (in one cold run: 1218 ms, then 50 and 44 ms). Judge latency from later calls.
 - 400 public images, one train and validation split, no separate test set and no defect-free images. The real false-alarm rate is not measured.
 - Lab-style images with even lighting. Expect lower numbers on a real mill without retraining.
 - No login, no camera integration, and the Docker image has not been tested.
