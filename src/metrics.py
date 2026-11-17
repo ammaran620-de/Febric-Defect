@@ -72,7 +72,7 @@ def match_boxes(pred_boxes, gt_boxes, t=IOU_THRESHOLD):
 
 def prf(tp, fp, fn):
     p = tp / (tp + fp) if tp + fp else 0.0; r = tp / (tp + fn) if tp + fn else 0.0
-    return {"precision": round(p, 4), "recall": round(r, 4), "f1": round(2 * p * r / (p + r), 4) if p + r else 0.0,
+    return {"precision": round(p, 6), "recall": round(r, 6), "f1": round(2 * p * r / (p + r), 6) if p + r else 0.0,
             "tp": tp, "fp": fp, "fn": fn}
 
 

@@ -23,7 +23,7 @@ Validation set: 80 images, 101 labelled defects, 4 classes (hole, objects, oil s
 | | YOLOv8n | OpenCV baseline |
 |---|---:|---:|
 | Precision | 0.887 | 0.140 |
-| Recall | 0.852 | 0.069 |
+| Recall | 0.851 | 0.069 |
 | F1 | 0.869 | 0.093 |
 | True positives, false positives, misses | 86, 11, 15 | 7, 43, 94 |
 

@@ -67,7 +67,7 @@ Held-out validation split: 80 images, 101 labelled defects, 4 classes.
 | Metric | YOLOv8n (this repo) | OpenCV baseline |
 |---|---:|---:|
 | Precision (conf 0.25, IoU 0.5) | **0.887** | 0.140 |
-| Recall | **0.852** | 0.069 |
+| Recall | **0.851** | 0.069 |
 | F1 | **0.869** | 0.093 |
 | mAP@0.5 | **0.880** | n/a |
 | mAP@0.5:0.95 | **0.565** | n/a |
@@ -452,12 +452,12 @@ Training from scratch was tried first and failed (mAP@0.5 of 0.18 on 400 images)
 
 | Class-agnostic localization (class ignored) | Precision | Recall | F1 | TP | FP | FN |
 |---|---:|---:|---:|---:|---:|---:|
-| YOLOv8n (conf 0.25) | 0.887 | 0.852 | 0.869 | 86 | 11 | 15 |
+| YOLOv8n (conf 0.25) | 0.887 | 0.851 | 0.869 | 86 | 11 | 15 |
 | OpenCV baseline | 0.140 | 0.069 | 0.093 | 7 | 43 | 94 |
 
 | Class-aware (class must match, YOLOv8n only) | Precision | Recall | F1 | TP | FP | FN |
 |---|---:|---:|---:|---:|---:|---:|
-| YOLOv8n (conf 0.25) | 0.866 | 0.832 | 0.849 | 84 | 13 | 17 |
+| YOLOv8n (conf 0.25) | 0.866 | 0.832 | 0.848 | 84 | 13 | 17 |
 
 Of the 13 class-aware false positives, 4 are boxes in the right place with the wrong class and 1 is a duplicate. Class-aware counts per class (true positives, false positives, misses): hole 19, 3, 4; objects 26, 5, 7; oil spot 19, 1, 1; thread error 20, 4, 5.
 
@@ -480,7 +480,7 @@ The threshold is the main operating-point control. Raising it removes false alar
 
 | Confidence | Precision | Recall |
 |---:|---:|---:|
-| 0.25 (default) | 0.887 | 0.852 |
+| 0.25 (default) | 0.887 | 0.851 |
 | 0.55 | 0.970 | 0.644 |
 
 The full sweep from 0.1 to 0.9 is in `results/summary.json` and plotted on the dashboard's Model page. A mill that cannot tolerate a shipped defect should run a lower threshold and accept more manual re-checks. One that cannot tolerate false stoppages should run a higher one.
