@@ -66,7 +66,7 @@
   }
   function thumb(bmp, w, h, defects) {
     const s = 480 / w, c = document.createElement('canvas'); c.width = 480; c.height = Math.round(h * s);
-    const x = c.getContext('2d'); x.drawImage(bmp, 0, 0, c.width, c.height); x.strokeStyle = '#ff4b2b'; x.lineWidth = 2;
+    const x = c.getContext('2d'); x.drawImage(bmp, 0, 0, c.width, c.height); x.strokeStyle = '#c4321f'; x.lineWidth = 2;
     defects.forEach(d => x.strokeRect(d.box[0] * s, d.box[1] * s, (d.box[2] - d.box[0]) * s, (d.box[3] - d.box[1]) * s));
     return new Promise(res => c.toBlob(b => res(URL.createObjectURL(b)), 'image/jpeg', 0.85));
   }

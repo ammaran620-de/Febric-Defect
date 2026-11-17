@@ -92,7 +92,6 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 **Dashboard**
 - Six pages: Overview, Inspect, Batch, History, Model, Error review
 - Live webcam preview with bounding boxes, plus single-image and batch upload
-- Three switchable themes (Mono default, Blue, Dark)
 - Charts drawn with inline SVG, so there are no front-end dependencies and no build step
 
 **Engineering**
@@ -128,9 +127,8 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 </tr>
 </table>
 
-The default theme is deliberately monochrome so defect boxes and verdicts are the only strong colour on screen.
+The UI is deliberately flat and monochrome, so defect boxes and FAIL verdicts are the only colour on screen.
 
-![Themes](docs/themes.png)
 
 ---
 

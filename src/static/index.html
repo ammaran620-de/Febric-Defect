@@ -1,115 +1,116 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><script>document.documentElement.dataset.theme=new URLSearchParams(location.search).get("theme")||localStorage.getItem("th")||"mono"</script>
-<title>Fabric Inspection System</title><style>
-:root,[data-theme=mono]{--page:#f2f3f5;--side:#ffffff;--sidetx:#4b5563;--sideon:#111827;--sideonbg:#eceef1;--card:#ffffff;--cardline:#e5e7eb;--tx:#111827;--mut:#6b7280;--line:#e5e7eb;--head:#111827;--headsub:#6b7280;--acc:#111827;--a2:#4b5563;--a3:#9ca3af;--a4:#d1d5db;--soft:#eceef1;--soft2:#f3f4f6;--btn:#111827;--btntx:#ffffff;--shadow:0 1px 2px rgba(0,0,0,.05)}
-[data-theme=blue]{--page:#eef2f8;--side:#ffffff;--sidetx:#475569;--sideon:#1d4ed8;--sideonbg:#e8efff;--card:#ffffff;--cardline:#e2e8f0;--tx:#0f172a;--mut:#64748b;--line:#e2e8f0;--head:#0f172a;--headsub:#64748b;--acc:#2563eb;--a2:#60a5fa;--a3:#93c5fd;--a4:#cbd9f5;--soft:#e8eef8;--soft2:#f1f5fb;--btn:#2563eb;--btntx:#ffffff;--shadow:0 1px 2px rgba(15,23,42,.06)}
-[data-theme=dark]{--page:#0e1013;--side:#14171c;--sidetx:#9aa3af;--sideon:#f3f4f6;--sideonbg:#232830;--card:#171a20;--cardline:#262b33;--tx:#e8eaed;--mut:#8b94a1;--line:#262b33;--head:#f3f4f6;--headsub:#8b94a1;--acc:#e8eaed;--a2:#a8b0bb;--a3:#6b7480;--a4:#3a414b;--soft:#232830;--soft2:#1c2027;--btn:#e8eaed;--btntx:#0e1013;--shadow:none}
-
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,Segoe UI,Arial,sans-serif;color:var(--tx);background:var(--page);min-height:100vh;display:flex}
-aside{width:210px;padding:20px 14px;background:var(--side);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;color:var(--sidetx)}
-aside h1{font-size:15px;margin:0 8px 22px;color:var(--head)}aside h1 small{color:var(--mut);font-weight:400}aside a{display:block;padding:9px 12px;border-radius:10px;color:var(--sidetx);text-decoration:none;margin-bottom:4px;cursor:pointer}
-aside a.on,aside a:hover{background:var(--sideonbg);color:var(--sideon)}
-main{flex:1;padding:24px 28px;max-width:1200px}h2{font-size:22px;margin:0 0 4px;color:var(--head)}.sub{color:var(--headsub);margin-bottom:20px}
-.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:14px}
-.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
-.kpi .v{font-size:26px;font-weight:700}.kpi .l{color:var(--mut);font-size:12px}
-.two{grid-template-columns:2fr 1fr;margin-bottom:14px}.card h3{margin:0 0 12px;font-size:14px;color:var(--mut);font-weight:600}
-table{width:100%;border-collapse:collapse}td,th{padding:7px 6px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600;font-size:12px}
-.errs{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}.errs .card{padding:8px}.errs img{width:100%;border-radius:10px;display:block}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;margin:6px 0 2px;background:var(--soft);color:var(--tx)}.FP{background:var(--card);border:1px solid var(--line)}
-button,.btn{background:var(--btn);color:var(--btntx);border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer}button.alt{background:var(--card);color:var(--tx);border:1px solid var(--line)}
-.live{grid-template-columns:1fr 280px}.stage{position:relative;background:var(--soft2);border-radius:12px;min-height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.stage canvas{width:100%;height:auto;display:block}.stage video{display:none}.hint{color:var(--mut)}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}input[type=range]{accent-color:var(--acc)}
-.det{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
-.page{display:none}.page.on{display:block}small{color:var(--mut)}
-@media(max-width:860px){aside{display:none}.two,.live{grid-template-columns:1fr}}
-
-.verdict{font-size:20px;font-weight:700;padding:10px 14px;border-radius:12px;margin-bottom:12px;display:inline-block}.v-PASS{background:var(--soft);color:var(--tx)}.v-FAIL{background:var(--acc);color:var(--card)}
-.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px}.p-PASS{background:var(--soft);color:var(--tx)}.p-FAIL{background:var(--acc);color:var(--card)}
-.prog{height:8px;background:var(--soft);border-radius:8px;overflow:hidden;margin:10px 0}.prog div{height:8px;background:var(--acc);width:0}
-.th{width:64px;height:44px;object-fit:cover;border-radius:6px;cursor:pointer;display:block}
-.three{grid-template-columns:repeat(3,1fr);margin-bottom:14px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.step{background:var(--soft2);border-radius:12px;padding:12px;font-size:13px}.step b{display:block;margin-bottom:4px}
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9}#modal img{max-width:90vw;max-height:88vh;border-radius:12px}
-select{padding:7px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--tx)}a.link{color:var(--tx);font-weight:600}ul.l{margin:0;padding-left:18px}ul.l li{margin:4px 0}
-@media(max-width:860px){.three,.steps{grid-template-columns:1fr}}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
+<title>Fabric defect inspection</title><style>
+:root{--page:#ffffff;--tx:#1b1b1b;--mut:#6a6a66;--line:#d9d9d4;--soft:#f3f3f0;--soft2:#f7f7f5;--acc:#c4321f;--mono:ui-monospace,"SF Mono",Consolas,Menlo,"Liberation Mono",monospace}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--tx);background:var(--page)}
+header{display:flex;align-items:baseline;gap:28px;padding:14px 28px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+header .id{font:600 14px var(--mono);margin-right:6px}header .id small{font-weight:400;color:var(--mut);margin-left:10px}
+nav{display:flex;gap:22px;margin-bottom:-1px}nav a{padding:8px 0;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;text-decoration:none}
+nav a:hover{color:var(--tx)}nav a.on{color:var(--tx);border-bottom-color:var(--tx)}
+main{padding:22px 28px 60px;max-width:1180px}h2{font-size:17px;margin:0 0 2px;font-weight:600}.sub{color:var(--mut);margin-bottom:18px;font-size:13px}
+h3{margin:0 0 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.grid{display:grid;gap:28px}.two{grid-template-columns:1fr 1fr;margin-bottom:26px}.live{grid-template-columns:1fr 300px}.three{grid-template-columns:repeat(3,1fr)}
+.sec{border-top:1px solid var(--line);padding-top:12px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,th{padding:5px 8px 5px 0;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--mut);font-weight:500;font-size:12px}td.n,th.n{text-align:right;font-family:var(--mono)}td{font-size:13px}
+.kv td:first-child{color:var(--mut)}.kv td:last-child{text-align:right;font-family:var(--mono)}
+.mono{font-family:var(--mono)}.hint,small{color:var(--mut)}
+button,.btn{font:inherit;background:var(--tx);color:#fff;border:1px solid var(--tx);border-radius:2px;padding:6px 14px;cursor:pointer}button.alt{background:#fff;color:var(--tx);border-color:var(--line)}button:hover{opacity:.88}
+input[type=file]{font:inherit;font-size:13px}select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--tx)}
+input[type=range]{accent-color:var(--tx)}a.link{color:var(--tx);text-decoration:underline;text-underline-offset:3px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.stage{background:var(--soft2);border:1px solid var(--line);min-height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage canvas{width:100%;height:auto;display:block}.stage video{display:none}
+.det{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line);font-size:13px}.det span:last-child{font-family:var(--mono)}
+.page{display:none}.page.on{display:block}
+.v{font:600 12px var(--mono);letter-spacing:.03em}.v.FAIL{color:var(--acc)}.v.PASS{color:var(--mut)}
+.verdict{font:600 26px var(--mono);display:block;margin:2px 0 10px}.v-FAIL{color:var(--acc)}.v-PASS{color:var(--tx)}
+.prog{height:3px;background:var(--soft);margin:10px 0}.prog div{height:3px;background:var(--tx);width:0}
+.th{width:60px;height:42px;object-fit:cover;cursor:pointer;display:block;border:1px solid var(--line)}
+.bar{height:3px;background:var(--soft);min-width:80px}.bar i{display:block;height:3px;background:var(--tx)}
+.errs{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}.errs img{width:100%;display:block;border:1px solid var(--line);cursor:pointer}
+.errs span{display:block;font:12px var(--mono);margin-top:4px}.errs .FN{color:var(--acc)}.errs .FP{color:var(--mut)}
+ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:5px 0}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:9}#modal img{max-width:90vw;max-height:88vh}
+.note{border-left:2px solid var(--tx);padding:2px 0 2px 12px;margin:0 0 22px;font-size:13px;color:var(--tx)}
+@media(max-width:860px){.two,.live,.three{grid-template-columns:1fr}header{padding:12px 16px 0}main{padding:18px 16px}}
 </style></head><body>
-<aside><h1>Fabric Inspection<br><small>YOLOv8 quality control</small></h1>
-<a class="on" data-p="overview">Overview</a><a data-p="inspect">Inspect</a><a data-p="batch">Batch</a><a data-p="history">History</a><a data-p="model">Model</a><a data-p="errors">Error review</a><div style="position:absolute;bottom:16px;left:14px;font-size:12px">Theme: <select id="th"><option value="mono">Mono</option><option value="blue">Blue</option><option value="dark">Dark</option></select></div></aside>
+<header><div class="id">fabric-defect<small>yolov8n · tilda-400 subset</small></div>
+<nav><a class="on" data-p="overview">Overview</a><a data-p="inspect">Inspect</a><a data-p="batch">Batch</a><a data-p="history">History</a><a data-p="model">Model</a><a data-p="errors">Errors</a></nav></header>
 <main>
-<section id="overview" class="page on"><h2>Inspection overview</h2><div class="sub" id="meta">Loading…</div>
-<div class="grid kpis" id="kpis"></div><div class="sub" style="margin:-4px 0 14px;font-size:12px">Note: the validation batch contains only images with labelled defects, so a low pass rate here reflects that dataset, not a production line.</div>
-<div class="grid two"><div class="card"><h3>Defects per inspected image (last 40)</h3><div id="spark"></div></div><div class="card"><h3>Pass / fail</h3><div id="pf"></div></div></div>
-<div class="grid two"><div class="card"><h3>Defects found by class</h3><div id="bycls"></div></div><div class="card"><h3>Latest inspections</h3><table id="latest"></table></div></div></section>
+<section id="overview" class="page on"><h2>Overview</h2><div class="sub" id="meta">Loading…</div>
+<div class="grid two"><div><h3>Validation, conf 0.25</h3><table class="kv" id="kpis"></table></div><div><h3>Inspection log</h3><table class="kv" id="kpis2"></table></div></div>
+<div class="sub" style="margin:-10px 0 22px;font-size:12px">The validation images all contain labelled defects, so a low pass rate here describes the data, not a production line.</div>
+<div class="grid two"><div class="sec"><h3>Defects per image, last 40</h3><div id="spark"></div></div><div class="sec"><h3>Verdicts</h3><div id="pf"></div></div></div>
+<div class="grid two"><div class="sec"><h3>Defects found by class</h3><table id="bycls"></table></div><div class="sec"><h3>Latest</h3><table id="latest"></table></div></div></section>
 
-<section id="inspect" class="page"><h2>Inspect an image</h2><div class="sub">Upload a fabric image. The result is saved to the inspection log. Use the webcam for a live preview (not logged).</div>
-<div class="grid live"><div class="card"><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>Confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv">0.25</span></label></div>
-<div class="stage"><span class="hint" id="hint">No image yet</span><canvas id="cnv" hidden></canvas><video id="vid" playsinline muted></video></div></div>
-<div class="card"><h3>Result</h3><div id="verd"><span class="hint">None yet</span></div><div id="dets"></div><p><small id="ms"></small></p></div></div></section>
+<section id="inspect" class="page"><h2>Inspect an image</h2><div class="sub">Upload a fabric image. The result goes into the inspection log. The webcam preview is not logged.</div>
+<div class="grid live"><div><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv" class="mono">0.25</span></label></div>
+<div class="stage"><span class="hint" id="hint">no image</span><canvas id="cnv" hidden></canvas><video id="vid" playsinline muted></video></div></div>
+<div><h3>Result</h3><div id="verd"><span class="hint">none yet</span></div><div id="dets"></div><p><small class="mono" id="ms"></small></p></div></div></section>
 
-<section id="batch" class="page"><h2>Batch inspection</h2><div class="sub">Select many images at once. Each is inspected and logged.</div>
-<div class="card"><div class="row"><input type="file" id="bfiles" accept="image/*" multiple><button id="brun">Run batch</button><a class="link" href="/api/history.csv">Download full log (CSV)</a></div>
-<div class="prog"><div id="bp"></div></div><div id="bsum" class="sub" style="color:var(--mut)"></div><table id="btab"></table></div></section>
+<section id="batch" class="page"><h2>Batch</h2><div class="sub">Select several images. Each one is inspected and logged.</div>
+<div class="row"><input type="file" id="bfiles" accept="image/*" multiple><button id="brun">Run</button><a class="link" href="/api/history.csv">log.csv</a></div>
+<div class="prog"><div id="bp"></div></div><div id="bsum" class="sub mono"></div><table id="btab"></table></section>
 
-<section id="history" class="page"><h2>Inspection history</h2><div class="sub">Every inspection saved by the system.</div>
-<div class="card"><div class="row"><select id="hf"><option value="">All</option><option>PASS</option><option>FAIL</option></select><a class="link" href="/api/history.csv">Download CSV</a></div><table id="htab"></table></div></section>
+<section id="history" class="page"><h2>History</h2><div class="sub">Every inspection stored by the service.</div>
+<div class="row"><select id="hf"><option value="">all</option><option>PASS</option><option>FAIL</option></select><a class="link" href="/api/history.csv">log.csv</a></div><table id="htab"></table></section>
 
-<section id="model" class="page"><h2>Model performance</h2><div class="sub" id="mmeta"></div>
-<div class="grid kpis" id="mk"></div>
-<div class="grid two"><div class="card"><h3>Precision / recall vs confidence threshold (validation)</h3><div id="sweep"></div></div><div class="card"><h3>YOLO vs OpenCV baseline (IoU 0.5)</h3><table id="cmp"></table><h3 style="margin-top:18px">Per-class</h3><table id="pc"></table></div></div>
-<div class="grid two"><div class="card"><h3>Confusion matrix</h3><img src="/training/confusion_matrix.png" style="width:100%;border-radius:10px"></div><div class="card"><h3>Training curves</h3><img src="/training/results.png" style="width:100%;border-radius:10px"></div></div>
-<div class="card" style="margin-bottom:14px"><h3>How it works</h3><div class="steps"><div class="step"><b>1. Capture</b>Image uploaded or taken from webcam.</div><div class="step"><b>2. Detect</b>YOLOv8n finds defects and classes.</div><div class="step"><b>3. Decide</b>Any defect above the threshold = FAIL.</div><div class="step"><b>4. Log</b>Result and annotated image saved to SQLite; export as CSV.</div></div></div>
-<div class="card"><h3>Limitations</h3><ul class="l"><li>Small public dataset (320 train / 80 validation images), single split and seed, no separate test set.</li><li>Tiny defects and faint thin thread errors are the main misses (see Error review).</li><li>Numbers come from the validation split. Real mill conditions need retraining on local data.</li></ul></div></section>
+<section id="model" class="page"><h2>Model</h2><div class="sub" id="mmeta"></div>
+<div class="grid two"><div><h3>Validation metrics</h3><table class="kv" id="mk"></table></div><div><h3>YOLOv8n vs OpenCV baseline, IoU 0.5</h3><table id="cmp"></table><h3 style="margin-top:20px">Per class</h3><table id="pc"></table></div></div>
+<div class="sec" style="margin-bottom:26px"><h3>Precision / recall vs confidence threshold</h3><div id="sweep"></div></div>
+<div class="grid two"><div class="sec"><h3>Confusion matrix</h3><img src="/training/confusion_matrix.png" style="width:100%"></div><div class="sec"><h3>Training curves</h3><img src="/training/results.png" style="width:100%"></div></div>
+<div class="grid two"><div class="sec"><h3>Pipeline</h3><ol class="l"><li>Image in (upload or webcam frame).</li><li>YOLOv8n returns boxes and classes.</li><li>Any box at or above the threshold means FAIL.</li><li>Verdict and annotated thumbnail go to SQLite.</li></ol></div>
+<div class="sec"><h3>Limits</h3><ul class="l"><li>320 train / 80 validation images, one split, one seed. No separate test set.</li><li>Misses are mostly tiny defects and faint thread errors.</li><li>Numbers are validation-split numbers. A real mill needs local data and retraining.</li></ul></div></div></section>
 
-<section id="errors" class="page"><h2>Error review</h2><div class="sub">Validation images the model got wrong. Green = ground truth, red = prediction.</div><div class="grid errs" id="errgrid"></div></section>
+<section id="errors" class="page"><h2>Errors</h2><div class="sub">Validation images the model got wrong. Green box = ground truth, red = prediction.</div>
+<div class="grid two"><div class="sec"><h3>What went wrong</h3><ul class="l"><li>15 missed defects and 11 false alarms out of 101 labelled defects, spread over 19 images.</li><li>Lowest recall: thread error 0.70. Lowest precision: objects 0.75, hole 0.79.</li><li>Raising the threshold to 0.55 gives precision 0.97 at recall 0.64, so misses and false alarms trade off directly.</li></ul></div>
+<div class="sec"><h3>Hypotheses and next checks</h3><ul class="l"><li>Thin thread errors may lose detail at 416 px. Check: retrain at 640 and compare recall.</li><li>Small data. Check: a proper train / val / test split.</li><li>No defect-free images in validation, so the real false-alarm rate is unmeasured. Check: add clean fabric.</li></ul></div></div>
+<div class="grid errs" id="errgrid"></div></section>
 </main><div id="modal"><img id="mimg"></div>
 <script>
-const $=s=>document.querySelector(s),pct=v=>(v*100).toFixed(1)+'%',V=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),SH=['var(--acc)','var(--a2)','var(--a3)','var(--a4)'],PF=['var(--acc)','var(--a4)'],BOX=V('--acc')==='#e8eaed'?'#f5f5f5':V('--acc');
-const go=p=>{document.querySelectorAll('aside a,.page').forEach(e=>e.classList.remove('on'));document.querySelector(`aside a[data-p=${p}]`).classList.add('on');$('#'+p).classList.add('on');if(p==='overview')loadOverview();if(p==='history')loadHistory()};
-document.querySelectorAll('aside a').forEach(a=>a.onclick=()=>go(a.dataset.p));
+const $=s=>document.querySelector(s),pct=v=>(v*100).toFixed(1)+'%',V=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),BOX=V('--acc');
+const go=p=>{document.querySelectorAll('nav a,.page').forEach(e=>e.classList.remove('on'));document.querySelector(`nav a[data-p=${p}]`).classList.add('on');$('#'+p).classList.add('on');if(p==='overview')loadOverview();if(p==='history')loadHistory()};
+document.querySelectorAll('nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 $('#modal').onclick=()=>$('#modal').style.display='none';
 const showImg=u=>{$('#mimg').src=u;$('#modal').style.display='flex'};
-const bars=(el,items,max)=>$(el).innerHTML=items.length?items.map(([n,v,l])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${n}</span><span>${l??v}</span></div><div style="background:var(--soft);border-radius:8px;height:12px"><div style="width:${max?v/max*100:0}%;height:12px;border-radius:8px;background:var(--acc)"></div></div></div>`).join(''):'<span class="hint">No data yet</span>';
-function donut(el,items,pal=SH){const tot=items.reduce((a,b)=>a+b[1],0),R=60,C=2*Math.PI*R;let o=0;
- const seg=items.map(([n,v],i)=>{const l=tot?v/tot*C:0,s=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="${pal[i%pal.length]}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-o}" transform="rotate(-90 80 80)"/>`;o+=l;return s}).join('');
- $(el).innerHTML=`<svg viewBox="0 0 160 160" width="150" style="display:block;margin:auto">${seg}<text x="80" y="86" text-anchor="middle" fill="var(--tx)" font-size="20" font-weight="700">${tot}</text></svg><div style="margin-top:8px">${items.map(([n,v],i)=>`<div class="det"><span><span style="color:${pal[i%pal.length]}">●</span> ${n}</span><span>${v}</span></div>`).join('')}</div>`}
-const row=(n,m)=>`<tr><td>${n}</td><td>${pct(m.precision)}</td><td>${pct(m.recall)}</td><td>${m.f1.toFixed(3)}</td></tr>`;
-const pill=v=>`<span class="pill p-${v}">${v}</span>`;
+const kv=rows=>rows.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('');
+const bars=(el,items,max)=>$(el).innerHTML=items.length?items.map(([n,v])=>`<tr><td>${n}</td><td style="width:45%"><div class="bar"><i style="width:${max?v/max*100:0}%"></i></div></td><td class="n">${v}</td></tr>`).join(''):'<tr><td class="hint">no data yet</td></tr>';
+const row=(n,m)=>`<tr><td>${n}</td><td class="n">${pct(m.precision)}</td><td class="n">${pct(m.recall)}</td><td class="n">${m.f1.toFixed(3)}</td></tr>`;
+const pill=v=>`<span class="v ${v}">${v}</span>`;
 async function loadOverview(){const [st,sm,h]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=6'].map(u=>fetch(u).then(r=>r.json())));
- $('#meta').textContent=`${sm.model} · ${sm.dataset} · inspection log: ${st.inspections} images`;
- const k=[['Inspections',st.inspections],['Pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['Defects found',st.defects],['Avg latency (CPU)',st.avg_ms+' ms'],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['F1',sm.yolo.f1.toFixed(3)]];
- $('#kpis').innerHTML=k.map(x=>`<div class="card kpi"><div class="v">${x[1]}</div><div class="l">${x[0]}</div></div>`).join('');
- const r=st.recent,mx=Math.max(1,...r),w=520,hh=110,bw=w/Math.max(r.length,1);
- $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+16}" width="100%">${r.map((v,i)=>`<rect x="${i*bw+2}" y="${hh-Math.max(v/mx*hh,4)}" width="${bw-4}" height="${Math.max(v/mx*hh,4)}" rx="3" fill="${v?'var(--acc)':'var(--a4)'}"/>`).join('')}<line x1="0" x2="${w}" y1="${hh}" y2="${hh}" stroke="var(--line)"/></svg><small>Grey bar = image with no defect. Max ${mx} per image.</small>`:'<span class="hint">No inspections yet</span>';
- donut('#pf',[['FAIL',st.failed],['PASS',st.passed]],PF);
- const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]);bars('#bycls',cl.map(([n,v])=>[n,v]),Math.max(1,...cl.map(x=>x[1])));
- $('#latest').innerHTML='<tr><th></th><th>File</th><th>Result</th><th>Defects</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td>${x.filename.slice(0,18)}</td><td>${pill(x.verdict)}</td><td>${x.n_defects}</td></tr>`).join('')}
+ $('#meta').textContent=`${sm.model} · ${sm.dataset} · ${st.inspections} images in the log`;
+ $('#kpis').innerHTML=kv([['precision',pct(sm.yolo.precision)],['recall',pct(sm.yolo.recall)],['F1',sm.yolo.f1.toFixed(3)],['TP / FP / FN',`${sm.yolo.tp} / ${sm.yolo.fp} / ${sm.yolo.fn}`],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',sm.ultralytics_val['mAP50-95'].toFixed(3)]]);
+ $('#kpis2').innerHTML=kv([['inspections',st.inspections],['pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['defects found',st.defects],['avg latency, CPU',st.avg_ms+' ms']]);
+ const r=st.recent,mx=Math.max(1,...r),w=520,hh=100,bw=w/Math.max(r.length,1);
+ $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+4}" width="100%">${r.map((v,i)=>`<rect x="${i*bw+1}" y="${hh-Math.max(v/mx*hh,3)}" width="${bw-2}" height="${Math.max(v/mx*hh,3)}" fill="${v?'#1b1b1b':'#c9c9c4'}"/>`).join('')}<line x1="0" x2="${w}" y1="${hh}" y2="${hh}" stroke="#d9d9d4"/></svg><small>Short grey bar = no defect. Tallest = ${mx} per image.</small>`:'<span class="hint">no inspections yet</span>';
+ $('#pf').innerHTML=`<table class="kv">${kv([['FAIL',st.failed],['PASS',st.passed]])}</table>`;
+ const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]);bars('#bycls',cl,Math.max(1,...cl.map(x=>x[1])));
+ $('#latest').innerHTML='<tr><th></th><th>file</th><th>verdict</th><th class="n">n</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td class="mono">${x.filename.slice(0,16)}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td></tr>`).join('')}
 async function loadHistory(){const v=$('#hf').value,h=await fetch('/api/history?limit=300&verdict='+v).then(r=>r.json());
- $('#htab').innerHTML='<tr><th></th><th>#</th><th>Time (UTC)</th><th>File</th><th>Source</th><th>Result</th><th>Defects</th><th>Classes</th><th>Max conf</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td>${x.id}</td><td>${x.ts.replace('T',' ').replace('+00:00','')}</td><td>${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${pill(x.verdict)}</td><td>${x.n_defects}</td><td>${x.classes||'–'}</td><td>${x.max_conf||'–'}</td></tr>`).join('')}
+ $('#htab').innerHTML='<tr><th></th><th class="n">#</th><th>time (UTC)</th><th>file</th><th>source</th><th>verdict</th><th class="n">n</th><th>classes</th><th class="n">max conf</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td class="n">${x.id}</td><td class="mono">${x.ts.replace('T',' ').replace('+00:00','')}</td><td class="mono">${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td><td>${x.classes||'–'}</td><td class="n">${x.max_conf||'–'}</td></tr>`).join('')}
 $('#hf').onchange=loadHistory;
 fetch('/api/summary').then(r=>r.json()).then(d=>{
  $('#mmeta').textContent=`${d.model} · ${d.images.train} train / ${d.images.val} validation images`;
- $('#mk').innerHTML=[['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['Precision',pct(d.yolo.precision)],['Recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['Missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]].map(x=>`<div class="card kpi"><div class="v">${x[1]}</div><div class="l">${x[0]}</div></div>`).join('');
- $('#cmp').innerHTML='<tr><th>Method</th><th>P</th><th>R</th><th>F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
- $('#pc').innerHTML='<tr><th>Class</th><th>P</th><th>R</th><th>mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td>${c.precision.toFixed(2)}</td><td>${c.recall.toFixed(2)}</td><td>${c.map50.toFixed(2)}</td></tr>`).join('');
- const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="var(--acc)" stroke-width="2.5" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
- $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="var(--line)"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="var(--mut)">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="var(--mut)">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>Solid = precision · dashed = recall · dotted = F1. Default threshold 0.25.</small>`});
-fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div class="card"><img loading="lazy" src="/errors/${e.file}" onclick="showImg(this.src)" style="cursor:pointer"><span class="badge ${e.kind}">${e.kind==='FN'?'Missed defect':'False alarm'}</span></div>`).join(''):'<span class="hint">No error images found</span>');
+ $('#mk').innerHTML=kv([['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['precision',pct(d.yolo.precision)],['recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]]);
+ $('#cmp').innerHTML='<tr><th>method</th><th class="n">P</th><th class="n">R</th><th class="n">F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
+ $('#pc').innerHTML='<tr><th>class</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td class="n">${c.precision.toFixed(2)}</td><td class="n">${c.recall.toFixed(2)}</td><td class="n">${c.map50.toFixed(2)}</td></tr>`).join('');
+ const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="#1b1b1b" stroke-width="2" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
+ $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%" style="max-width:640px"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="#d9d9d4"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="#d9d9d4"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="#6a6a66">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="#6a6a66">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>solid precision · dashed recall · dotted F1. Default threshold 0.25.</small>`});
+fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div><img loading="lazy" src="/errors/${e.file}" onclick="showImg(this.src)"><span class="${e.kind}">${e.kind==='FN'?'missed defect':'false alarm'}</span></div>`).join(''):'<span class="hint">no error images found</span>');
 const cnv=$('#cnv'),ctx=cnv.getContext('2d'),vid=$('#vid');let busy=false,stream=null,timer=null,lastFile=null;
 $('#conf').oninput=e=>{$('#cv').textContent=e.target.value;if(lastFile&&!stream)inspectFile(lastFile)};
-function draw(src,d){cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);const lw=Math.max(2,d.width/250),fs=Math.max(12,d.width/45);ctx.lineWidth=lw;ctx.font=fs+'px sans-serif';
- d.defects.forEach(x=>{const[a,b,c,e]=x.box,t=`${x.class} ${x.confidence}`;ctx.strokeStyle=BOX;ctx.strokeRect(a,b,c-a,e-b);ctx.fillStyle=BOX;const ty=b-fs-6<0?b+fs+6:b-4;ctx.fillRect(a,ty-fs-2,ctx.measureText(t).width+8,fs+6);ctx.fillStyle=BOX==='#f5f5f5'?'#111':'#fff';ctx.fillText(t,a+4,ty)});
+function draw(src,d){cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);const lw=Math.max(2,d.width/250),fs=Math.max(12,d.width/45);ctx.lineWidth=lw;ctx.font=fs+'px monospace';
+ d.defects.forEach(x=>{const[a,b,c,e]=x.box,t=`${x.class} ${x.confidence}`;ctx.strokeStyle=BOX;ctx.strokeRect(a,b,c-a,e-b);ctx.fillStyle=BOX;const ty=b-fs-6<0?b+fs+6:b-4;ctx.fillRect(a,ty-fs-2,ctx.measureText(t).width+8,fs+6);ctx.fillStyle='#fff';ctx.fillText(t,a+4,ty)});
  $('#verd').innerHTML=`<span class="verdict v-${d.defects.length?'FAIL':'PASS'}">${d.defects.length?'FAIL':'PASS'}</span>`;
- $('#dets').innerHTML=d.defects.length?d.defects.map(x=>`<div class="det"><span>${x.class}</span><span>${(x.confidence*100).toFixed(0)}%</span></div>`).join(''):'<span class="hint">No defects found</span>'}
+ $('#dets').innerHTML=d.defects.length?d.defects.map(x=>`<div class="det"><span>${x.class}</span><span>${(x.confidence*100).toFixed(0)}%</span></div>`).join(''):'<span class="hint">no defects found</span>'}
 async function post(url,blob){const fd=new FormData();fd.append('file',blob,blob.name||'frame.jpg');const r=await fetch(url,{method:'POST',body:fd});if(!r.ok)throw new Error(await r.text());return r.json()}
-async function inspectFile(f){stopCam();lastFile=f;try{const t0=performance.now(),d=await post('/api/inspect?conf='+$('#conf').value+'&source=upload',f);$('#ms').textContent=`Model ${d.ms} ms · saved as inspection #${d.id}`;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)}catch(e){$('#dets').textContent='Error: '+e.message}}
+async function inspectFile(f){stopCam();lastFile=f;try{const t0=performance.now(),d=await post('/api/inspect?conf='+$('#conf').value+'&source=upload',f);$('#ms').textContent=`model ${d.ms} ms · inspection #${d.id}`;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)}catch(e){$('#dets').textContent='Error: '+e.message}}
 $('#file').onchange=e=>e.target.files[0]&&inspectFile(e.target.files[0]);
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;clearInterval(timer);$('#cam').textContent='Start webcam'}}
 $('#cam').onclick=async()=>{if(stream)return stopCam();try{stream=await navigator.mediaDevices.getUserMedia({video:true})}catch(e){$('#dets').textContent='Webcam not available';return}
  vid.srcObject=stream;await vid.play();$('#cam').textContent='Stop webcam';
  timer=setInterval(async()=>{if(busy||!vid.videoWidth)return;busy=true;try{const c=document.createElement('canvas');c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext('2d').drawImage(vid,0,0);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));const d=await post('/predict?conf='+$('#conf').value,b);draw(c,d)}catch(e){}busy=false},600)};
-$('#brun').onclick=async()=>{const fs=[...$('#bfiles').files];if(!fs.length)return;$('#btab').innerHTML='<tr><th>File</th><th>Result</th><th>Defects</th><th>ms</th></tr>';let f=0;
- for(let i=0;i<fs.length;i++){try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=batch',fs[i]);if(d.verdict==='FAIL')f++;$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name.slice(0,30)}</td><td>${pill(d.verdict)}</td><td>${d.defects.length}</td><td>${d.ms}</td></tr>`)}catch(e){$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name}</td><td colspan=3>error</td></tr>`)}
+$('#brun').onclick=async()=>{const fs=[...$('#bfiles').files];if(!fs.length)return;$('#btab').innerHTML='<tr><th>file</th><th>verdict</th><th class="n">n</th><th class="n">ms</th></tr>';let f=0;
+ for(let i=0;i<fs.length;i++){try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=batch',fs[i]);if(d.verdict==='FAIL')f++;$('#btab').insertAdjacentHTML('beforeend',`<tr><td class="mono">${fs[i].name.slice(0,30)}</td><td>${pill(d.verdict)}</td><td class="n">${d.defects.length}</td><td class="n">${d.ms}</td></tr>`)}catch(e){$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name}</td><td colspan=3>error</td></tr>`)}
   $('#bp').style.width=((i+1)/fs.length*100)+'%';$('#bsum').textContent=`${i+1}/${fs.length} done · ${f} failed · ${i+1-f} passed`}};
-$('#th').value=document.documentElement.dataset.theme;$('#th').onchange=e=>{localStorage.setItem('th',e.target.value);location.reload()};
 loadOverview();
 </script></body></html>

@@ -15,10 +15,9 @@ h = (ROOT/"src"/"static"/"index.html").read_text(encoding="utf-8")
 for a, b in [('src="/api/thumb/${x.id}"', 'src="${THUMB(x.id)}"'), ('src="/errors/${e.file}"', 'src="errors/${e.file}"'),
              ('src="/training/', 'src="training/'), ('href="/api/history.csv"', 'href="#csv"')]:
     assert a in h, a; h = h.replace(a, b)
-banner = ('<div style="background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:14px;font-size:13px">'
-          '<b>Live static demo.</b> The detector runs <b>in your browser</b> (ONNX Runtime Web), so images never leave your device. '
-          'The inspection log starts with 80 real validation predictions and resets when you reload. '
-          '<a href="https://github.com/ammaran620-de/Febric-Defect" style="color:inherit">Source code</a></div>')
+banner = ('<div class="note"><b>Static demo.</b> The detector runs in your browser (ONNX Runtime Web), so images stay on your device. '
+          'The log starts with 80 real validation predictions and resets on reload. '
+          '<a class="link" href="https://github.com/ammaran620-de/Febric-Defect">Source</a></div>')
 h = h.replace("<main>", "<main>" + banner, 1)
 h = h.replace("<script>\nconst $=", '<script src="vendor/ort.wasm.min.js"></script>\n<script src="static-api.js"></script>\n<script>\nconst $=', 1)
 assert "static-api.js" in h

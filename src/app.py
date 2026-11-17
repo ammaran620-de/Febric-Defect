@@ -60,7 +60,7 @@ def log_inspection(img, filename, source, conf):
         iid = cur.lastrowid
     vis = img.copy(); lw = max(2, img.shape[1]//250)
     for d in defects:
-        x0, y0, x1, y1 = map(int, d["box"]); cv2.rectangle(vis, (x0, y0), (x1, y1), (118, 118, 15), lw)
+        x0, y0, x1, y1 = map(int, d["box"]); cv2.rectangle(vis, (x0, y0), (x1, y1), (31, 50, 196), lw)
     s = 480/vis.shape[1]; vis = cv2.resize(vis, (480, int(vis.shape[0]*s)))
     cv2.imwrite(str(THUMBS/f"{iid}.jpg"), vis)
     return {"id": iid, "verdict": verdict, "defects": defects, "ms": round(ms, 1), "width": img.shape[1], "height": img.shape[0]}
