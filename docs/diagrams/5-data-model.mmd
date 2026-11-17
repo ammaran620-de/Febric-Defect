@@ -1,0 +1,14 @@
+erDiagram
+  INSPECTIONS {
+    int id PK
+    text ts "UTC timestamp"
+    text source "upload, batch, validation batch"
+    text filename
+    text verdict "PASS or FAIL"
+    int n_defects
+    real max_conf
+    text classes "comma separated"
+    real conf_used "threshold at inspection time"
+    real ms "model time"
+    text boxes "JSON list of box, class, confidence"
+  }

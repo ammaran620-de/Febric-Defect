@@ -1,0 +1,17 @@
+sequenceDiagram
+  participant U as User
+  participant UI as Dashboard
+  participant API as FastAPI /api/inspect
+  participant M as YOLOv8n
+  participant S as SQLite + thumbnails
+  U->>UI: choose image, set confidence
+  UI->>API: POST image + confidence
+  API->>API: decode image (400 if not an image)
+  API->>M: predict(image, confidence)
+  M-->>API: boxes, classes, confidences
+  API->>API: verdict = FAIL if any box, else PASS
+  API->>S: INSERT inspection row
+  API->>S: save annotated 480 px thumbnail
+  API-->>UI: id, verdict, defects, ms
+  UI->>UI: draw boxes on canvas, show verdict
+  Note over UI,S: History, Overview and CSV export read from the same log

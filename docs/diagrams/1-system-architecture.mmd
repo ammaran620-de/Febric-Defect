@@ -1,0 +1,48 @@
+flowchart LR
+  subgraph CLIENT["Browser: dashboard (src/static/index.html)"]
+    direction TB
+    UI1["Inspect, Batch"]
+    UIW["Inspect: webcam preview"]
+    UI2["Overview, History"]
+    UI3["Model, Error review"]
+  end
+  subgraph API["FastAPI service (src/app.py)"]
+    direction TB
+    E1["POST /api/inspect<br/>(logged)"]
+    E2["POST /predict<br/>(not logged)"]
+    E3["GET /api/history, /api/stats<br/>/api/history.csv, /api/thumb/id"]
+    E4["GET /api/summary, /api/errors<br/>/training/*, /errors/*"]
+  end
+  subgraph STORE["Model and storage"]
+    direction TB
+    M["YOLOv8n detector<br/>results/best.pt"]
+    DB[("SQLite log<br/>results/inspections.db")]
+    TH["Annotated thumbnails<br/>results/inspections/"]
+    R["Offline results<br/>summary.json, metrics.json,<br/>error images, training curves"]
+  end
+  UI1 --> E1
+  UIW --> E2
+  UI2 --> E3
+  UI3 --> E4
+  E1 --> M
+  E1 --> DB
+  E1 --> TH
+  E2 --> M
+  E3 --> DB
+  E3 --> TH
+  E4 --> R
+
+  classDef ui fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef api fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef model fill:#111827,stroke:#111827,color:#ffffff,rx:8,ry:8
+  classDef store fill:#eceef1,stroke:#6b7280,stroke-width:1.5px,color:#111827
+  classDef step fill:#ffffff,stroke:#4b5563,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef out fill:#eceef1,stroke:#6b7280,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef bad fill:#ffffff,stroke:#9ca3af,stroke-dasharray:4 3,color:#4b5563,rx:8,ry:8
+  class UI1,UIW,UI2,UI3 ui
+  class E1,E2,E3,E4 api
+  class M model
+  class DB,TH,R store
+  style CLIENT fill:#f6f7f9,stroke:#d1d5db,color:#111827
+  style API fill:#f6f7f9,stroke:#d1d5db,color:#111827
+  style STORE fill:#f6f7f9,stroke:#d1d5db,color:#111827

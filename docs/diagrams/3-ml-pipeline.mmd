@@ -1,0 +1,35 @@
+flowchart TD
+  D[("Dataset: TILDA-400 subset<br/>320 train / 80 val, YOLO format")]
+  T["train.py<br/>YOLOv8n, COCO-pretrained, 40 epochs, 416 px"]
+  W["best.pt (trained weights)"]
+  B["baseline.py<br/>OpenCV median-blur difference"]
+  EV["evaluate.py<br/>same IoU 0.5 matching for both methods"]
+  MJ["metrics.json<br/>precision, recall, F1"]
+  ER["results/errors/<br/>missed and false-alarm images"]
+  MS["make_summary.py<br/>per-class metrics, threshold sweep"]
+  SJ["summary.json"]
+  DASH(["Dashboard: Model and Error review pages"])
+  D --> T
+  T --> W
+  W --> EV
+  B --> EV
+  D -. "validation images" .-> EV
+  EV --> MJ
+  EV --> ER
+  W --> MS
+  MJ --> MS
+  MS --> SJ
+  SJ --> DASH
+  ER --> DASH
+
+  classDef ui fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef api fill:#ffffff,stroke:#111827,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef model fill:#111827,stroke:#111827,color:#ffffff,rx:8,ry:8
+  classDef store fill:#eceef1,stroke:#6b7280,stroke-width:1.5px,color:#111827
+  classDef step fill:#ffffff,stroke:#4b5563,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef out fill:#eceef1,stroke:#6b7280,stroke-width:1.5px,color:#111827,rx:8,ry:8
+  classDef bad fill:#ffffff,stroke:#9ca3af,stroke-dasharray:4 3,color:#4b5563,rx:8,ry:8
+  class D,MJ,SJ,ER store
+  class T,B,EV,MS step
+  class W model
+  class DASH out
