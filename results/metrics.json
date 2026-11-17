@@ -5,7 +5,8 @@
     "f1": 0.8687,
     "tp": 86,
     "fp": 11,
-    "fn": 15
+    "fn": 15,
+    "duplicate_fp": 3
   },
   "baseline": {
     "precision": 0.14,
@@ -14,6 +15,63 @@
     "tp": 7,
     "fp": 43,
     "fn": 94
+  },
+  "yolo_class_aware": {
+    "precision": 0.866,
+    "recall": 0.8317,
+    "f1": 0.8485,
+    "tp": 84,
+    "fp": 13,
+    "fn": 17,
+    "wrong_class_fp": 4,
+    "duplicate_fp": 1
+  },
+  "yolo_class_aware_per_class": [
+    {
+      "class": "hole",
+      "precision": 0.8636,
+      "recall": 0.8261,
+      "f1": 0.8444,
+      "tp": 19,
+      "fp": 3,
+      "fn": 4
+    },
+    {
+      "class": "objects",
+      "precision": 0.8387,
+      "recall": 0.7879,
+      "f1": 0.8125,
+      "tp": 26,
+      "fp": 5,
+      "fn": 7
+    },
+    {
+      "class": "oil spot",
+      "precision": 0.95,
+      "recall": 0.95,
+      "f1": 0.95,
+      "tp": 19,
+      "fp": 1,
+      "fn": 1
+    },
+    {
+      "class": "thread error",
+      "precision": 0.8333,
+      "recall": 0.8,
+      "f1": 0.8163,
+      "tp": 20,
+      "fp": 4,
+      "fn": 5
+    }
+  ],
+  "evaluation": {
+    "images": 80,
+    "conf": 0.25,
+    "iou": 0.5,
+    "negative_images": 0,
+    "yolo_baseline": "class-agnostic localization: a box counts if it overlaps a labelled defect at IoU >= 0.5, class ignored",
+    "yolo_class_aware": "box must also name the labelled defect's class; a wrong-class box is a false positive and the defect stays a miss",
+    "caveat": "the validation split has no defect-free images, so a factory false-alarm rate is not measured"
   },
   "ultralytics_val": {
     "precision": 0.8172,

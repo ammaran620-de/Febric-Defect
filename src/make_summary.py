@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 import cv2
 sys.path.insert(0, str(Path(__file__).parent))
-from evaluate import match, gt_boxes, prf
+from evaluate import match, gt_boxes, prf  # class-agnostic helpers, shared with src/metrics.py
 from ultralytics import YOLO
 
 w, data = sys.argv[1], sys.argv[2]
