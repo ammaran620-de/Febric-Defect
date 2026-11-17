@@ -1,6 +1,13 @@
-# Third-party runtime bundled for the Pages demo (ONNX Runtime Web).
-docs/vendor/** linguist-vendored=true
-# Binary or rendered outputs, not hand-written source.
+# Pages build output written by src/build_static.py. The sources are src/static and src/static_site.
+docs/index.html linguist-generated=true
+docs/static-api.js linguist-generated=true
+docs/data/** linguist-generated=true
 docs/model/** linguist-generated=true
 docs/demo/** linguist-generated=true
+docs/errors/** linguist-generated=true
+docs/training/** linguist-generated=true
+docs/fonts/** linguist-generated=true
+# Third-party ONNX Runtime Web files copied in by the same script.
+docs/vendor/** linguist-vendored=true
+# Rendered from the Mermaid sources next to them.
 docs/diagrams/*.png linguist-generated=true
