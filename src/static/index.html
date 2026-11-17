@@ -1,123 +1,186 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
-<title>Fabric defect inspection</title><style>
-:root{--page:#0e1013;--tx:#e8eaed;--mut:#8b929c;--line:#272c34;--soft:#1d2128;--soft2:#14171c;--acc:#ff5a45;--mono:ui-monospace,"SF Mono",Consolas,Menlo,"Liberation Mono",monospace}
-*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--tx);background:var(--page)}
-header{display:flex;align-items:baseline;gap:28px;padding:14px 32px 0;border-bottom:1px solid var(--line);background:var(--soft2);flex-wrap:wrap}
-header .id{font:600 14px var(--mono);margin-right:6px}header .id small{font-weight:400;color:var(--mut);margin-left:10px}
-nav{display:flex;gap:22px;margin-bottom:-1px}nav a{padding:8px 0;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;text-decoration:none}
-nav a:hover{color:var(--tx)}nav a.on{color:var(--tx);border-bottom-color:var(--tx)}
-main{padding:24px 32px 60px}h2{font-size:17px;margin:0 0 2px;font-weight:600}.sub{color:var(--mut);margin-bottom:18px;font-size:13px}
-h3{margin:0 0 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);font-weight:600}
-.grid{display:grid;gap:28px}.two{grid-template-columns:1fr 1fr;margin-bottom:26px}.live{grid-template-columns:1fr 300px}.three{grid-template-columns:repeat(3,1fr)}
-.sec{border-top:1px solid var(--line);padding-top:12px}
-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,th{padding:5px 8px 5px 0;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
-th{color:var(--mut);font-weight:500;font-size:12px}td.n,th.n{text-align:right;font-family:var(--mono)}td{font-size:13px}
-.kv td:first-child{color:var(--mut)}.kv td:last-child{text-align:right;font-family:var(--mono)}
-.mono{font-family:var(--mono)}.hint,small{color:var(--mut)}
-button,.btn{font:inherit;background:var(--tx);color:var(--page);border:1px solid var(--tx);border-radius:2px;padding:6px 14px;cursor:pointer}button.alt{background:transparent;color:var(--tx);border-color:var(--line)}button:hover{opacity:.88}
-input[type=file]{font:inherit;font-size:13px}select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:2px;background:var(--soft);color:var(--tx)}
-input[type=range]{accent-color:var(--tx)}a.link{color:var(--tx);text-decoration:underline;text-underline-offset:3px}
-.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-.stage{background:var(--soft2);border:1px solid var(--line);min-height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage canvas{max-width:100%;max-height:560px;width:auto;height:auto;display:block}.stage video{display:none}
-.det{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line);font-size:13px}.det span:last-child{font-family:var(--mono)}
-[hidden]{display:none!important}.page{display:none}.page.on{display:block}
-.v{font:600 12px var(--mono);letter-spacing:.03em}.v.FAIL{color:var(--acc)}.v.PASS{color:var(--mut)}
-.verdict{font:600 26px var(--mono);display:block;margin:2px 0 10px}.v-FAIL{color:var(--acc)}.v-PASS{color:var(--tx)}
-.prog{height:3px;background:var(--soft);margin:10px 0}.prog div{height:3px;background:var(--tx);width:0}
-.th{width:60px;height:42px;object-fit:cover;cursor:pointer;display:block;border:1px solid var(--line)}
-.bar{height:4px;background:var(--soft);min-width:80px}.bar i{display:block;height:4px;background:var(--acc)}
-.errs{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}.errs img{width:100%;display:block;border:1px solid var(--line);cursor:pointer}
-.errs span{display:block;font:12px var(--mono);margin-top:4px}.errs .FN{color:var(--acc)}.errs .FP{color:var(--mut)}
-ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:5px 0}
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:9}#modal img{max-width:90vw;max-height:88vh}
-.note{border-left:2px solid var(--acc);padding:2px 0 2px 12px;margin:0 0 22px;font-size:13px;color:var(--tx)}
-@media(max-width:860px){.two,.live,.three{grid-template-columns:1fr}header{padding:12px 16px 0}main{padding:18px 16px}}
-.strip{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);background:var(--soft2);margin-bottom:10px}
-.strip>div{padding:20px 22px;border-right:1px solid var(--line)}.strip>div:last-child{border-right:0}
-.strip b{display:block;font:600 38px/1.1 var(--mono);letter-spacing:-.02em}.strip span{display:block;margin-top:6px;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
-.panel{border:1px solid var(--line);background:var(--soft2);padding:16px 20px}.hero{grid-template-columns:1.5fr 1fr;margin-bottom:28px}
-.herobox{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}.herobox img{width:480px;max-width:100%;display:block;border:1px solid var(--line);cursor:pointer}.herobox .kv{flex:1;min-width:220px}
-@media(max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}}
-</style></head><body>
-<header><div class="id">fabric-defect<small>yolov8n · tilda-400 subset</small></div>
-<nav><a class="on" data-p="overview">Overview</a><a data-p="inspect">Inspect</a><a data-p="batch">Batch</a><a data-p="history">History</a><a data-p="model">Model</a><a data-p="errors">Errors</a></nav></header>
+<script>try{document.documentElement.dataset.theme=new URLSearchParams(location.search).get("theme")||localStorage.getItem("th")||"mono"}catch(e){document.documentElement.dataset.theme="mono"}</script>
+<title>Fabric inspection</title><style>
+@font-face{font-family:Archivo;src:url(fonts/archivo.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+:root,[data-theme=mono]{--page:#f2f3f5;--side:#ffffff;--card:#ffffff;--line:#e4e6ea;--ink:#111827;--mut:#667085;--acc:#111827;--acct:#ffffff;--soft:#eef0f3;--flag:#d92d20;--img:#eceef1;--sh:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04);--sw1:#f2f3f5;--sw2:#111827}
+[data-theme=blue]{--page:linear-gradient(160deg,#e6eefc,#f1f5fc 55%,#e9f0fb);--side:#ffffff;--card:#ffffff;--line:#dbe4f2;--ink:#0e1a33;--mut:#5b6b88;--acc:#2456e6;--acct:#ffffff;--soft:#e7eefb;--flag:#d92d20;--img:#e4ebf7;--sh:0 1px 2px rgba(14,26,51,.06),0 2px 6px rgba(36,86,230,.05);--sw1:#eef3fb;--sw2:#2456e6}
+[data-theme=dark]{--page:#0c0e12;--side:#101319;--card:#13161c;--line:#222730;--ink:#e8eaee;--mut:#8b93a1;--acc:#9db9ff;--acct:#0c0e12;--soft:#1b1f27;--flag:#ff6b57;--img:#090b0e;--sh:none;--sw1:#0c0e12;--sw2:#9db9ff}
+*{box-sizing:border-box}html{scrollbar-color:var(--line) transparent}
+body{margin:0;background:var(--page) fixed;color:var(--ink);font:14px/1.5 Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;transition:background .25s,color .25s}
+::selection{background:var(--acc);color:var(--acct)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.num{font-weight:680;letter-spacing:-.02em}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;background:var(--side);border-right:1px solid var(--line);padding:22px 14px 18px;display:flex;flex-direction:column;transition:background .25s,border-color .25s}
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px 24px}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--acc);color:var(--acct);display:grid;place-items:center;flex:none}
+.brand b{display:block;font-size:15.5px;font-weight:650;line-height:1.2}.brand span{display:block;color:var(--mut);font-size:12.5px}
+nav{display:flex;flex-direction:column;gap:3px}
+nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:var(--mut);cursor:pointer;font-weight:500;transition:background .15s,color .15s}
+nav a svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+nav a:hover{background:var(--soft);color:var(--ink)}nav a.on{background:var(--soft);color:var(--ink);font-weight:650}nav a.on svg{color:var(--acc)}
+[data-theme=mono] nav a.on svg{color:var(--ink)}
+.side-foot{margin-top:auto;padding:16px 8px 0;border-top:1px solid var(--line)}
+.side-foot p{margin:0 0 10px;color:var(--mut);font-size:12.5px}
+.sw{display:flex;gap:10px}.sw button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);padding:0;cursor:pointer;background:linear-gradient(135deg,var(--a) 50%,var(--b) 50%);transition:transform .15s,box-shadow .15s}
+.sw button:hover{transform:scale(1.08)}.sw button[aria-pressed=true]{box-shadow:0 0 0 2px var(--side),0 0 0 4px var(--acc)}
+main{padding:28px 36px 70px;min-width:0;max-width:1560px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.top h1{margin:0;font-size:27px;font-weight:660;letter-spacing:-.012em;line-height:1.15}.top p{margin:4px 0 0;color:var(--mut);max-width:70ch}
+.note{background:var(--soft);border-radius:10px;padding:10px 14px;margin:0 0 22px;font-size:13px;color:var(--mut)}.note a{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--sh);transition:background .25s,border-color .25s}
+.card h3{margin:0 0 4px;font-size:15px;font-weight:650}.card .hsub{margin:0 0 16px;color:var(--mut);font-size:13px;max-width:62ch}
+.grid{display:grid;gap:18px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}
+.kpi{padding:18px 20px}.kpi .ic{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--acc);margin-bottom:14px}[data-theme=mono] .kpi .ic{color:var(--ink)}.kpi .ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.kpi .l{color:var(--mut);font-size:13px;display:block}.kpi .v{font-size:30px;line-height:1.1;margin:4px 0 6px;display:block}.bar{cursor:pointer;transition:opacity .15s}.bar:hover{opacity:.7}.kpi .f{color:var(--mut);font-size:12.5px;line-height:1.35}
+.hero{grid-template-columns:minmax(0,1.95fr) minmax(0,1fr);margin-bottom:18px;align-items:stretch}
+.herow{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(170px,1fr);gap:28px;align-items:start}
+.two{grid-template-columns:1fr 1fr;margin-bottom:18px}.three{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);margin-bottom:18px}
+table{width:100%;border-collapse:collapse}td,th{padding:9px 12px 9px 0;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}tbody tr:hover td{background:color-mix(in srgb,var(--soft) 55%,transparent)}
+th{color:var(--mut);font-weight:500;font-size:12.5px;padding-top:2px}td.n,th.n{text-align:right;padding-right:0}
+.kv td:first-child{color:var(--mut)}.kv td:last-child{text-align:right;font-weight:620;padding-right:0}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:650;line-height:1.5}
+.chip.FAIL{background:color-mix(in srgb,var(--flag) 14%,transparent);color:var(--flag)}.chip.PASS{background:var(--soft);color:var(--mut)}
+.hint,small{color:var(--mut)}
+button,.btn{font:inherit;font-weight:600;background:var(--acc);color:var(--acct);border:1px solid var(--acc);border-radius:10px;padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-block;transition:filter .15s,background .15s}
+button:hover,.btn:hover{filter:brightness(1.12)}button.alt,.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}button.alt:hover,.btn.alt:hover{background:var(--soft);filter:none}
+input[type=file]{font:inherit;font-size:13.5px;color:var(--mut);max-width:270px}input[type=range]{accent-color:var(--acc);width:150px}
+select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.page{display:none}.page.on{display:block}[hidden]{display:none!important}
+.frame{display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:22px auto}
+.rx{grid-column:2;grid-row:1;display:block;overflow:visible}.ry{grid-column:1;grid-row:2;display:block;overflow:visible}
+.rx text,.ry text{fill:var(--mut);font-size:10px;font-stretch:75%}.rx line,.ry line{stroke:var(--mut);opacity:.7}
+.fc{grid-column:2;grid-row:2;display:flex;align-items:flex-start;min-height:120px}
+.fc img,.fc canvas{display:block;max-width:100%;max-height:560px;width:auto;height:auto;background:var(--img);border-radius:2px;box-shadow:0 0 0 1px var(--line)}
+.fc img{cursor:zoom-in}.fc .hint{align-self:center;padding:50px 20px}
+.rx,.ry{animation:fade .7s .3s both}@keyframes fade{from{opacity:0}to{opacity:1}}
+.vbig{font-stretch:62%;font-weight:780;font-size:104px;line-height:.85;margin:2px 0 14px;color:var(--ink)}.vbig.FAIL{color:var(--flag)}
+.vtext{font-size:16px;font-weight:550;margin:0 0 3px}.vmeta{color:var(--mut);font-size:13.5px;margin:0 0 16px}
+.roll{display:grid;grid-template-columns:repeat(auto-fit,minmax(9px,1fr));gap:3px}
+.roll button{height:40px;padding:0;border:1px solid var(--line);background:transparent;border-radius:3px}
+.roll button:hover{outline:2px solid var(--acc);outline-offset:1px;filter:none}
+.roll .c1{background:color-mix(in srgb,var(--acc) 30%,transparent);border-color:transparent}.roll .c2{background:color-mix(in srgb,var(--acc) 62%,transparent);border-color:transparent}.roll .c3{background:var(--acc);border-color:transparent}
+.cls{display:grid;grid-template-columns:104px 1fr 30px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}.cls:last-child{border-bottom:0}
+.cls i{display:block;height:7px;border-radius:4px;background:var(--acc)}.cls .t{height:7px;border-radius:4px;background:var(--soft)}.cls span:last-child{text-align:right;font-weight:620}
+.donut{display:flex;align-items:center;gap:24px}.donut svg{width:132px;height:132px;flex:none}.donut ul{list-style:none;margin:0;padding:0;flex:1}.donut li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}.donut li:last-child{border:0}.donut i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+.th{width:62px;height:42px;object-fit:cover;cursor:zoom-in;display:block;border-radius:6px;box-shadow:0 0 0 1px var(--line)}
+.det{display:grid;grid-template-columns:1fr auto;gap:5px 12px;padding:10px 0;border-bottom:1px solid var(--line)}.det b{font-weight:640}.det i{grid-column:1/3;display:block;height:5px;border-radius:3px;background:var(--acc)}
+.prog{height:5px;background:var(--soft);border-radius:3px;margin:4px 0 12px;overflow:hidden}.prog div{height:5px;background:var(--acc);width:0;transition:width .2s}
+.errs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px 18px}.errs img{width:100%;display:block;cursor:zoom-in;border-radius:8px;box-shadow:0 0 0 1px var(--line)}.errs p{margin:7px 0 0;font-size:13px}.errs .FN{color:var(--flag);font-weight:620}.errs .FP{color:var(--mut)}
+ul.l,ol.l{margin:0;padding-left:20px;max-width:64ch}ul.l li,ol.l li{margin:7px 0}
+.live{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+.panelimg img{width:100%;display:block;border-radius:8px;box-shadow:0 0 0 1px var(--line)}
+.sk{display:block;height:1em;border-radius:6px;background:linear-gradient(90deg,var(--soft),var(--line),var(--soft));background-size:200% 100%;animation:sh 1.3s infinite linear}@keyframes sh{to{background-position:-200% 0}}
+#modal{position:fixed;inset:0;background:rgba(8,10,16,.82);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}#modal img{max-width:92vw;max-height:90vh;border-radius:6px}
+::view-transition-group(zoom){animation-duration:.38s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+@media(max-width:1280px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.three{grid-template-columns:1fr}}
+@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px}.brand{padding:0}nav{flex-direction:row;flex-wrap:wrap}.side-foot{margin:0 0 0 auto;border:0;padding:0}.side-foot p{display:none}main{padding:20px 16px 60px}.two,.three,.live{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div class="app">
+<aside><div class="brand"><div class="logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6.5h14M3 10h14M3 13.5h14M6.5 3v14M10 3v14M13.5 3v14" opacity=".75"/><circle cx="13.5" cy="6.5" r="2.1" fill="currentColor" stroke="none"/></svg></div><div><b>Fabric inspection</b><span>YOLOv8n quality control</span></div></div>
+<nav><a class="on" data-p="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>Overview</a>
+<a data-p="inspect"><svg viewBox="0 0 24 24"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><circle cx="12" cy="12" r="3"/></svg>Inspect</a>
+<a data-p="batch"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Batch</a>
+<a data-p="history"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</a>
+<a data-p="model"><svg viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Model</a>
+<a data-p="errors"><svg viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4.5M12 17.5h.01"/></svg>Errors</a></nav>
+<div class="side-foot"><p>Theme</p><div class="sw" id="sw"><button data-th="mono" style="--a:#f2f3f5;--b:#111827" aria-label="Light theme" aria-pressed="false"></button><button data-th="blue" style="--a:#eef3fb;--b:#2456e6" aria-label="Blue theme" aria-pressed="false"></button><button data-th="dark" style="--a:#0c0e12;--b:#9db9ff" aria-label="Dark theme" aria-pressed="false"></button></div></div></aside>
 <main>
-<section id="overview" class="page on"><h2>Overview</h2><div class="sub" id="meta">Loading…</div>
-<div class="strip" id="strip"></div>
-<div class="sub" style="font-size:12px;margin-bottom:24px">Validation numbers at conf 0.25. The validation images all contain labelled defects, so the low pass rate describes the data, not a production line.</div>
-<div class="grid hero"><div class="panel"><h3>Latest inspection</h3><div id="hero"></div></div>
-<div class="panel"><h3>Verdicts</h3><div id="pf"></div><h3 style="margin-top:24px">Defects by class</h3><table id="bycls"></table></div></div>
-<div class="panel" style="margin-bottom:28px"><h3>Defects per image, last 40</h3><div id="spark"></div></div>
-<div class="panel"><h3>Latest</h3><table id="latest"></table></div></section>
+<section id="overview" class="page on"><div class="top"><div><h1 id="greet">Good afternoon</h1><p id="meta"></p></div><div class="row" style="margin:0"><a class="btn alt" href="/api/history.csv">Download CSV</a><button onclick="go('inspect')">Inspect an image</button></div></div>
+<div class="grid kpis" id="kpis"><div class="card kpi"><span class="sk" style="width:60%"></span></div><div class="card kpi"><span class="sk" style="width:60%"></span></div><div class="card kpi"><span class="sk" style="width:60%"></span></div><div class="card kpi"><span class="sk" style="width:60%"></span></div><div class="card kpi"><span class="sk" style="width:60%"></span></div><div class="card kpi"><span class="sk" style="width:60%"></span></div></div>
+<div class="grid three"><div class="card"><h3>Defects per image</h3><p class="hsub">The last 40 inspections, oldest on the left. Click a bar to open the image.</p><div id="bars"></div></div>
+<div class="card"><h3>Verdicts</h3><p class="hsub">Every image in the log.</p><div id="pf" class="donut"></div><h3 style="margin-top:24px">Defects by class</h3><p class="hsub">Boxes found, by type.</p><div id="bycls"></div></div></div>
+<div class="card"><h3>Latest inspections</h3><p class="hsub">The eight most recent results.</p><table id="latest"></table></div></section>
 
-<section id="inspect" class="page"><h2>Inspect an image</h2><div class="sub">Upload a fabric image. The result goes into the inspection log. The webcam preview is not logged.</div>
-<div class="grid live"><div><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <span id="cv" class="mono">0.25</span></label></div>
-<div class="stage"><span class="hint" id="hint">no image</span><canvas id="cnv" hidden></canvas><video id="vid" playsinline muted></video></div></div>
-<div><h3>Result</h3><div id="verd"><span class="hint">none yet</span></div><div id="dets"></div><p><small class="mono" id="ms"></small></p></div></div></section>
+<section id="inspect" class="page"><div class="top"><div><h1>Inspect an image</h1><p>Upload a fabric image. The result is saved to the log. The webcam preview is not saved.</p></div></div>
+<div class="live"><div class="card"><div class="row"><input type="file" id="file" accept="image/*"><button class="alt" id="cam">Start webcam</button><label>Confidence <input type="range" id="conf" min="0.1" max="0.9" step="0.05" value="0.25"> <b id="cv">0.25</b></label></div>
+<div class="frame" id="inspframe"><svg class="rx"></svg><svg class="ry"></svg><div class="fc"><span class="hint" id="hint">Choose an image to inspect.</span><canvas id="cnv" hidden></canvas><video id="vid" playsinline muted hidden></video></div></div></div>
+<div class="card"><h3>Result</h3><div id="verd"><span class="hint">No result yet.</span></div><div id="dets"></div><p class="hsub" id="ms" style="margin:12px 0 0"></p></div></div></section>
 
-<section id="batch" class="page"><h2>Batch</h2><div class="sub">Select several images. Each one is inspected and logged.</div>
-<div class="row"><input type="file" id="bfiles" accept="image/*" multiple><button id="brun">Run</button><a class="link" href="/api/history.csv">log.csv</a></div>
-<div class="prog"><div id="bp"></div></div><div id="bsum" class="sub mono"></div><table id="btab"></table></section>
+<section id="batch" class="page"><div class="top"><div><h1>Batch inspection</h1><p>Select several images. Each one is inspected and saved to the log.</p></div></div>
+<div class="card"><div class="row"><input type="file" id="bfiles" accept="image/*" multiple><button id="brun">Run batch</button><a class="btn alt" href="/api/history.csv">Download log as CSV</a></div>
+<div class="prog"><div id="bp"></div></div><p class="hsub" id="bsum"></p><table id="btab"></table></div></section>
 
-<section id="history" class="page"><h2>History</h2><div class="sub">Every inspection stored by the service.</div>
-<div class="row"><select id="hf"><option value="">all</option><option>PASS</option><option>FAIL</option></select><a class="link" href="/api/history.csv">log.csv</a></div><table id="htab"></table></section>
+<section id="history" class="page"><div class="top"><div><h1>History</h1><p>Every inspection the service has stored.</p></div><div class="row" style="margin:0"><select id="hf"><option value="">All results</option><option>PASS</option><option>FAIL</option></select><a class="btn alt" href="/api/history.csv">Download log as CSV</a></div></div>
+<div class="card"><table id="htab"></table></div></section>
 
-<section id="model" class="page"><h2>Model</h2><div class="sub" id="mmeta"></div>
-<div class="grid two"><div><h3>Validation metrics</h3><table class="kv" id="mk"></table></div><div><h3>YOLOv8n vs OpenCV baseline, IoU 0.5</h3><table id="cmp"></table><h3 style="margin-top:20px">Per class</h3><table id="pc"></table></div></div>
-<div class="grid two"><div class="panel"><h3>Precision / recall vs confidence threshold</h3><div id="sweep"></div></div><div class="panel"><h3>Confusion matrix</h3><img src="/training/confusion_matrix.png" style="width:100%;max-height:420px;object-fit:contain;background:#fff"></div></div>
-<div class="grid two"><div class="panel"><h3>Training curves</h3><img src="/training/results.png" style="width:100%;background:#fff"></div><div class="panel"><h3>Pipeline</h3><ol class="l"><li>Image in (upload or webcam frame).</li><li>YOLOv8n returns boxes and classes.</li><li>Any box at or above the threshold means FAIL.</li><li>Verdict and annotated thumbnail go to SQLite.</li></ol><h3 style="margin-top:22px">Limits</h3><ul class="l"><li>320 train / 80 validation images, one split, one seed. No separate test set.</li><li>Misses are mostly tiny defects and faint thread errors.</li><li>Numbers are validation-split numbers. A real mill needs local data and retraining.</li></ul></div></div></section>
+<section id="model" class="page"><div class="top"><div><h1>Model performance</h1><p id="mmeta"></p></div></div>
+<div class="grid two"><div class="card"><h3>Validation results</h3><p class="hsub">Measured on the 80 held-out images at confidence 0.25.</p><table class="kv" id="mk"></table></div><div class="card"><h3>Against a classical baseline</h3><p class="hsub">Blur and threshold with OpenCV, no learning. IoU 0.5.</p><table id="cmp"></table><h3 style="margin-top:24px">By class</h3><table id="pc"></table></div></div>
+<div class="grid two"><div class="card"><h3>Raising the threshold trades recall for precision</h3><p class="hsub">Validation set, confidence from 0.1 to 0.9.</p><div id="sweep"></div></div><div class="card panelimg"><h3>Confusion matrix</h3><p class="hsub">Rows are predicted, columns are true.</p><img src="/training/confusion_matrix.png" style="max-height:440px;object-fit:contain;width:auto;max-width:100%;background:#fff"></div></div>
+<div class="grid two"><div class="card panelimg"><h3>Training curves</h3><p class="hsub">40 epochs.</p><img src="/training/results.png"></div><div class="card"><h3>How a verdict is decided</h3><ol class="l"><li>The image goes to YOLOv8n, which returns boxes and classes.</li><li>Any box at or above the confidence threshold makes the verdict FAIL.</li><li>The verdict and an annotated thumbnail are saved to SQLite.</li></ol><h3 style="margin-top:26px">What this does not show</h3><ul class="l"><li>The data is small: 320 training and 80 validation images, one split, one seed, no separate test set.</li><li>Most misses are tiny defects and faint thread errors.</li><li>These are validation numbers. A real mill needs local data and retraining.</li></ul></div></div></section>
 
-<section id="errors" class="page"><h2>Errors</h2><div class="sub">Validation images the model got wrong. Green box = ground truth, red = prediction.</div>
-<div class="grid two"><div class="sec"><h3>What went wrong</h3><ul class="l"><li>15 missed defects and 11 false alarms out of 101 labelled defects, spread over 19 images.</li><li>Lowest recall: thread error 0.70. Lowest precision: objects 0.75, hole 0.79.</li><li>Raising the threshold to 0.55 gives precision 0.97 at recall 0.64, so misses and false alarms trade off directly.</li></ul></div>
-<div class="sec"><h3>Hypotheses and next checks</h3><ul class="l"><li>Thin thread errors may lose detail at 416 px. Check: retrain at 640 and compare recall.</li><li>Small data. Check: a proper train / val / test split.</li><li>No defect-free images in validation, so the real false-alarm rate is unmeasured. Check: add clean fabric.</li></ul></div></div>
-<div class="grid errs" id="errgrid"></div></section>
-</main><div id="modal"><img id="mimg"></div>
+<section id="errors" class="page"><div class="top"><div><h1>Error review</h1><p>Validation images the model got wrong. Green is the ground truth and red is the prediction.</p></div></div>
+<div class="grid two"><div class="card"><h3>What went wrong</h3><ul class="l"><li>15 missed defects and 11 false alarms, out of 101 labelled defects, across 19 images.</li><li>Thread errors are missed most often, with recall 0.70. Objects and holes have the lowest precision, 0.75 and 0.79.</li><li>At a threshold of 0.55, precision is 0.97 and recall is 0.64. Misses and false alarms trade off directly.</li></ul></div>
+<div class="card"><h3>Not yet proven, and how I would check</h3><ul class="l"><li>Thin thread errors may lose detail at 416 px. Retrain at 640 px and compare recall.</li><li>One small split is not enough. Add a proper train, validation and test split.</li><li>Validation has no defect-free images, so the real false-alarm rate is unmeasured. Add clean fabric.</li></ul></div></div>
+<div class="card"><div class="errs" id="errgrid"></div></div></section>
+</main></div><div id="modal"><img id="mimg"></div>
 <script>
-const $=s=>document.querySelector(s),pct=v=>(v*100).toFixed(1)+'%',V=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),BOX=V('--acc');
+const $=s=>document.querySelector(s),pct=v=>(v*100).toFixed(1)+'%',V=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const setTheme=t=>{document.documentElement.dataset.theme=t;try{localStorage.setItem('th',t)}catch(e){}document.querySelectorAll('#sw button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.th===t))};
+document.querySelectorAll('#sw button').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));setTheme(document.documentElement.dataset.theme);
 const go=p=>{document.querySelectorAll('nav a,.page').forEach(e=>e.classList.remove('on'));document.querySelector(`nav a[data-p=${p}]`).classList.add('on');$('#'+p).classList.add('on');if(p==='overview')loadOverview();if(p==='history')loadHistory()};
 document.querySelectorAll('nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
-$('#modal').onclick=()=>$('#modal').style.display='none';
-const showImg=u=>{$('#mimg').src=u;$('#modal').style.display='flex'};
+const vt=()=>document.startViewTransition&&!matchMedia('(prefers-reduced-motion:reduce)').matches;let lastEl=null;
+const showImg=(u,el)=>{const open=()=>{$('#mimg').src=u;$('#modal').style.display='flex'};
+ if(el&&vt()){lastEl=el;el.style.viewTransitionName='zoom';document.startViewTransition(()=>{el.style.viewTransitionName='';$('#mimg').style.viewTransitionName='zoom';open()})}else{lastEl=null;open()}};
+const closeImg=()=>{const m=$('#mimg'),e=lastEl;lastEl=null;
+ if(e&&document.contains(e)&&vt()){document.startViewTransition(()=>{m.style.viewTransitionName='';e.style.viewTransitionName='zoom';$('#modal').style.display='none'}).finished.finally(()=>{e.style.viewTransitionName=''})}else{m.style.viewTransitionName='';$('#modal').style.display='none'}};
+$('#modal').onclick=closeImg;
 const kv=rows=>rows.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('');
-const bars=(el,items,max)=>$(el).innerHTML=items.length?items.map(([n,v])=>`<tr><td>${n}</td><td style="width:45%"><div class="bar"><i style="width:${max?v/max*100:0}%"></i></div></td><td class="n">${v}</td></tr>`).join(''):'<tr><td class="hint">no data yet</td></tr>';
 const row=(n,m)=>`<tr><td>${n}</td><td class="n">${pct(m.precision)}</td><td class="n">${pct(m.recall)}</td><td class="n">${m.f1.toFixed(3)}</td></tr>`;
-const pill=v=>`<span class="v ${v}">${v}</span>`;
-async function loadOverview(){const [st,sm,h]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=8'].map(u=>fetch(u).then(r=>r.json())));
- $('#meta').textContent=`${sm.model} · ${sm.dataset} · ${st.inspections} images in the log`;
- $('#strip').innerHTML=[['F1',sm.yolo.f1.toFixed(3)],['precision',pct(sm.yolo.precision)],['recall',pct(sm.yolo.recall)],['mAP50',sm.ultralytics_val.mAP50.toFixed(3)],['avg latency, CPU',st.avg_ms+' ms']].map(x=>`<div><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');
- const x=h.find(v=>v.n_defects>0)||h[0];
- $('#hero').innerHTML=x?`<div class="herobox"><img src="/api/thumb/${x.id}" onclick="showImg(this.src)"><table class="kv">${kv([['file',x.filename.slice(0,20)],['verdict',pill(x.verdict)],['defects',x.n_defects],['classes',x.classes||'–'],['top confidence',x.max_conf||'–'],['model time',x.ms?x.ms+' ms':'–']])}</table></div>`:'<span class="hint">no inspections yet</span>';
- const r=st.recent,mx=Math.max(1,...r),w=520,hh=100,bw=w/Math.max(r.length,1);
- $('#spark').innerHTML=r.length?`<svg viewBox="0 0 ${w} ${hh+4}" width="100%" preserveAspectRatio="none" style="height:110px;display:block">${r.map((v,i)=>`<rect x="${i*bw+1}" y="${hh-Math.max(v/mx*hh,3)}" width="${bw-2}" height="${Math.max(v/mx*hh,3)}" fill="${v?'var(--tx)':'var(--line)'}"/>`).join('')}</svg><small>Short grey bar = no defect. Tallest = ${mx} per image.</small>`:'<span class="hint">no inspections yet</span>';
- $('#pf').innerHTML=`<table class="kv">${kv([['FAIL',st.failed],['PASS',st.passed],['pass rate',st.inspections?pct(st.passed/st.inspections):'–'],['defects found',st.defects]])}</table>`;
- const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]);bars('#bycls',cl,Math.max(1,...cl.map(x=>x[1])));
- $('#latest').innerHTML='<tr><th></th><th>file</th><th>verdict</th><th class="n">n</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td class="mono">${x.filename.slice(0,22)}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td></tr>`).join('')}
+const chip=v=>`<span class="chip ${v}">${v==='FAIL'?'Fail':'Pass'}</span>`;
+/* Rulers read in pixels of the original image, so a defect box can be read off the frame. */
+function ruler(fr,sw,sh){const c=fr.querySelector('.fc').querySelector('img,canvas');if(!c||c.hidden)return;const r=c.getBoundingClientRect(),w=r.width,h=r.height;if(!w||!sw)return;
+ const k=w/sw;let S=50;while(S*k<44)S*=2;const m=S/5,rx=fr.querySelector('.rx'),ry=fr.querySelector('.ry');
+ rx.setAttribute('width',w);rx.setAttribute('height',22);ry.setAttribute('width',34);ry.setAttribute('height',h);let a='',b='';
+ for(let v=0;v<=sw;v+=m){const x=(v*k).toFixed(1),maj=v%S===0,l=maj?9:5;a+=`<line x1="${x}" x2="${x}" y1="${22-l}" y2="22"/>`;if(maj)a+=`<text x="${x}" y="9" text-anchor="${v===0?'start':'middle'}">${v}</text>`}
+ for(let v=0;v<=sh;v+=m){const y=(v*k).toFixed(1),maj=v%S===0,l=maj?9:5;b+=`<line x1="${34-l}" x2="34" y1="${y}" y2="${y}"/>`;if(maj&&v>0)b+=`<text x="20" y="${+y+3.5}" text-anchor="end">${v}</text>`}
+ rx.innerHTML=a;ry.innerHTML=b}
+const fit=(fr,sw,sh)=>{const c=fr.querySelector('.fc').querySelector('img,canvas');if(!c)return;const g=()=>ruler(fr,sw,sh);if(c.tagName==='IMG'&&!c.complete)c.onload=g;else g();if(window.ResizeObserver){fr._ro&&fr._ro.disconnect();fr._ro=new ResizeObserver(g);fr._ro.observe(c)}};
+function donut(el,fail,pass){const tot=fail+pass,R=52,C=2*Math.PI*R,lf=tot?fail/tot*C:0;
+ $(el).innerHTML=`<svg viewBox="0 0 132 132"><circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--soft)" stroke-width="16"/><circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--flag)" stroke-width="16" stroke-dasharray="${lf} ${C-lf}" transform="rotate(-90 66 66)"/><text x="66" y="64" text-anchor="middle" font-size="30" font-weight="700" fill="var(--ink)" style="font-stretch:68%">${tot}</text><text x="66" y="82" text-anchor="middle" font-size="11" fill="var(--mut)">images</text></svg><ul><li><span><i style="background:var(--flag)"></i>Fail</span><b>${fail}</b></li><li><span><i style="background:var(--soft);box-shadow:0 0 0 1px var(--line)"></i>Pass</span><b>${pass}</b></li></ul>`}
+const ICO={n:'<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><circle cx="12" cy="12" r="3"/>',p:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',d:'<path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4.5"/>',t:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',m:'<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>',f:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/>'};
+async function loadOverview(){const [st,sm,h,all]=await Promise.all(['/api/stats','/api/summary','/api/history?limit=8','/api/history?limit=40'].map(u=>fetch(u).then(r=>r.json())));
+ const hr=new Date().getHours();$('#greet').textContent=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+ $('#meta').textContent=`${st.inspections} images inspected, ${st.failed} failed. A YOLOv8n detector fine-tuned on a ${sm.images.train+sm.images.val}-image textile subset. Every validation image holds a labelled defect, so most of them fail by design.`;
+ const K=[['n','Inspections',st.inspections,`${st.failed} fail, ${st.passed} pass`],['p','Pass rate',st.inspections?pct(st.passed/st.inspections):'none','Low because every image holds a defect'],['d','Defects found',st.defects,`In ${Object.keys(st.by_class).length} classes`],['t','Average time',st.avg_ms+' ms','On CPU, one image at a time'],['m','mAP at IoU 0.5',sm.ultralytics_val.mAP50.toFixed(3),`Over IoU 0.5 to 0.95: ${sm.ultralytics_val['mAP50-95'].toFixed(3)}`],['f','F1 score',sm.yolo.f1.toFixed(3),`Precision ${pct(sm.yolo.precision)}, recall ${pct(sm.yolo.recall)}`]];
+ $('#kpis').innerHTML=K.map(k=>`<div class="card kpi"><span class="ic"><svg viewBox="0 0 24 24">${ICO[k[0]]}</svg></span><span class="l">${k[1]}</span><span class="v num">${k[2]}</span><span class="f">${k[3]}</span></div>`).join('');
+ const o=[...all].reverse(),mx=Math.max(3,...o.map(x=>x.n_defects)),W=720,H=330,P=28,bw=(W-P)/Math.max(o.length,1);
+ let g='';for(let i=0;i<=3;i++){const v=Math.round(mx*i/3),y=H-20-(H-34)*i/3;g+=`<line x1="${P}" x2="${W}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="0" y="${y+4}" font-size="11" fill="var(--mut)">${v}</text>`}
+ $('#bars').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">${g}${o.map((x,i)=>{const hh=Math.max(x.n_defects?4:2,x.n_defects/mx*(H-34));return `<rect class="bar" x="${P+i*bw+bw*.18}" y="${H-20-hh}" width="${bw*.64}" height="${hh}" rx="4" fill="${x.n_defects?'var(--acc)':'var(--line)'}" data-id="${x.id}"><title>${x.filename.slice(0,22)}: ${x.n_defects} defect${x.n_defects==1?'':'s'}</title></rect>`}).join('')}</svg>`;
+ document.querySelectorAll('#bars .bar').forEach(r=>r.onclick=()=>showImg('/api/thumb/'+r.dataset.id));
+ donut('#pf',st.failed,st.passed);
+ const cl=Object.entries(st.by_class).sort((a,b)=>b[1]-a[1]),cm=Math.max(1,...cl.map(a=>a[1]));
+ $('#bycls').innerHTML=cl.map(([n,v])=>`<div class="cls"><span>${n}</span><span class="t"><i style="width:${v/cm*100}%"></i></span><span>${v}</span></div>`).join('')||'<span class="hint">No inspections yet.</span>';
+ $('#latest').innerHTML='<tr><th></th><th>File</th><th>Result</th><th>Classes</th><th class="n">Defects</th><th class="n">Time</th></tr>'+h.map(x=>`<tr><td style="width:76px"><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src,this)" alt=""></td><td>${x.filename.slice(0,22)}</td><td>${chip(x.verdict)}</td><td>${(x.classes||'none').replace(/,/g,', ')}</td><td class="n">${x.n_defects}</td><td class="n">${x.ms} ms</td></tr>`).join('')}
 async function loadHistory(){const v=$('#hf').value,h=await fetch('/api/history?limit=300&verdict='+v).then(r=>r.json());
- $('#htab').innerHTML='<tr><th></th><th class="n">#</th><th>time (UTC)</th><th>file</th><th>source</th><th>verdict</th><th class="n">n</th><th>classes</th><th class="n">max conf</th></tr>'+h.map(x=>`<tr><td><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src)"></td><td class="n">${x.id}</td><td class="mono">${x.ts.replace('T',' ').replace('+00:00','')}</td><td class="mono">${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${pill(x.verdict)}</td><td class="n">${x.n_defects}</td><td>${x.classes||'–'}</td><td class="n">${x.max_conf||'–'}</td></tr>`).join('')}
+ $('#htab').innerHTML='<tr><th></th><th class="n">No.</th><th>Time (UTC)</th><th>File</th><th>Source</th><th>Result</th><th class="n">Defects</th><th>Classes</th><th class="n">Top confidence</th></tr>'+h.map(x=>`<tr><td style="width:76px"><img class="th" src="/api/thumb/${x.id}" onclick="showImg(this.src,this)" alt=""></td><td class="n">${x.id}</td><td>${x.ts.replace('T',' ').replace('+00:00','')}</td><td>${x.filename.slice(0,22)}</td><td>${x.source}</td><td>${chip(x.verdict)}</td><td class="n">${x.n_defects}</td><td>${(x.classes||'none').replace(/,/g,', ')}</td><td class="n">${x.max_conf||'none'}</td></tr>`).join('')}
 $('#hf').onchange=loadHistory;
 fetch('/api/summary').then(r=>r.json()).then(d=>{
- $('#mmeta').textContent=`${d.model} · ${d.images.train} train / ${d.images.val} validation images`;
- $('#mk').innerHTML=kv([['mAP50',d.ultralytics_val.mAP50.toFixed(3)],['mAP50-95',d.ultralytics_val['mAP50-95'].toFixed(3)],['precision',pct(d.yolo.precision)],['recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['missed / false alarms',d.yolo.fn+' / '+d.yolo.fp]]);
- $('#cmp').innerHTML='<tr><th>method</th><th class="n">P</th><th class="n">R</th><th class="n">F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
- $('#pc').innerHTML='<tr><th>class</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td class="n">${c.precision.toFixed(2)}</td><td class="n">${c.recall.toFixed(2)}</td><td class="n">${c.map50.toFixed(2)}</td></tr>`).join('');
- const W=520,H=200,P=30,x=c=>P+(c-0.1)/0.8*(W-P-10),y=v=>H-P-v*(H-P-10),ln=(k,dash)=>`<polyline fill="none" stroke="var(--tx)" stroke-width="2" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`;
- $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H+10}" width="100%"><line x1="${P}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/><line x1="${P}" x2="${P}" y1="${y(1)}" y2="${y(0)}" stroke="var(--line)"/>${[0,.5,1].map(v=>`<text x="2" y="${y(v)+4}" font-size="10" fill="var(--mut)">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)-8}" y="${H-8}" font-size="10" fill="var(--mut)">${c}</text>`).join('')}${ln('precision','')}${ln('recall','6 4')}${ln('f1','2 3')}</svg><small>solid precision · dashed recall · dotted F1. Default threshold 0.25.</small>`});
-fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div><img loading="lazy" src="/errors/${e.file}" onclick="showImg(this.src)"><span class="${e.kind}">${e.kind==='FN'?'missed defect':'false alarm'}</span></div>`).join(''):'<span class="hint">no error images found</span>');
+ $('#mmeta').textContent=`${d.model}. ${d.images.train} training and ${d.images.val} validation images.`;
+ $('#mk').innerHTML=kv([['mAP at IoU 0.5',d.ultralytics_val.mAP50.toFixed(3)],['mAP at IoU 0.5 to 0.95',d.ultralytics_val['mAP50-95'].toFixed(3)],['Precision',pct(d.yolo.precision)],['Recall',pct(d.yolo.recall)],['F1',d.yolo.f1.toFixed(3)],['Missed and false alarms',d.yolo.fn+' and '+d.yolo.fp]]);
+ $('#cmp').innerHTML='<tr><th>Method</th><th class="n">Precision</th><th class="n">Recall</th><th class="n">F1</th></tr>'+row('YOLOv8n',d.yolo)+row('OpenCV baseline',d.baseline);
+ $('#pc').innerHTML='<tr><th>Class</th><th class="n">Precision</th><th class="n">Recall</th><th class="n">mAP50</th></tr>'+d.per_class.map(c=>`<tr><td>${c.class}</td><td class="n">${c.precision.toFixed(2)}</td><td class="n">${c.recall.toFixed(2)}</td><td class="n">${c.map50.toFixed(2)}</td></tr>`).join('');
+ const W=560,H=250,P=34,R=70,x=c=>P+(c-0.1)/0.8*(W-P-R),y=v=>H-P-v*(H-P-14),ln=(k,col,dash)=>`<polyline fill="none" stroke="${col}" stroke-width="2.2" stroke-dasharray="${dash}" points="${d.sweep.map(s=>x(s.conf)+','+y(s[k])).join(' ')}"/>`,e=k=>d.sweep[d.sweep.length-1][k];
+ $('#sweep').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;font-stretch:75%"><line x1="${P}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/>${[0,.5,1].map(v=>`<line x1="${P}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="0" y="${y(v)+4}" font-size="11" fill="var(--mut)">${v}</text>`).join('')}${[.1,.25,.5,.75,.9].map(c=>`<text x="${x(c)}" y="${H-12}" font-size="11" fill="var(--mut)" text-anchor="middle">${c}</text>`).join('')}<line x1="${x(.25)}" x2="${x(.25)}" y1="${y(1)}" y2="${y(0)}" stroke="var(--flag)"/><text x="${x(.25)+5}" y="${y(1)+10}" font-size="11" fill="var(--flag)">Default 0.25</text>${ln('precision','var(--acc)','')}${ln('recall','var(--acc)','6 4')}${ln('f1','var(--mut)','')}<text x="${x(.9)+6}" y="${y(e('precision'))+4}" font-size="12" fill="var(--ink)">Precision</text><text x="${x(.9)+6}" y="${y(e('recall'))+4}" font-size="12" fill="var(--ink)">Recall</text><text x="${x(.9)+6}" y="${y(e('f1'))-6}" font-size="12" fill="var(--mut)">F1</text><text x="${P}" y="${H}" font-size="11" fill="var(--mut)">Confidence threshold</text></svg>`});
+fetch('/api/errors').then(r=>r.json()).then(l=>$('#errgrid').innerHTML=l.length?l.map(e=>`<div><img loading="lazy" src="/errors/${e.file}" onclick="showImg(this.src,this)" alt=""><p class="${e.kind}">${e.kind==='FN'?'Missed defect':'False alarm'}</p></div>`).join(''):'<span class="hint">No error images found.</span>');
 const cnv=$('#cnv'),ctx=cnv.getContext('2d'),vid=$('#vid');let busy=false,stream=null,timer=null,lastFile=null;
 $('#conf').oninput=e=>{$('#cv').textContent=e.target.value;if(lastFile&&!stream)inspectFile(lastFile)};
-function draw(src,d){cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);const lw=Math.max(2,d.width/250),fs=Math.max(12,d.width/45);ctx.lineWidth=lw;ctx.font=fs+'px monospace';
- d.defects.forEach(x=>{const[a,b,c,e]=x.box,t=`${x.class} ${x.confidence}`;ctx.strokeStyle=BOX;ctx.strokeRect(a,b,c-a,e-b);ctx.fillStyle=BOX;const ty=b-fs-6<0?b+fs+6:b-4;ctx.fillRect(a,ty-fs-2,ctx.measureText(t).width+8,fs+6);ctx.fillStyle='#fff';ctx.fillText(t,a+4,ty)});
- $('#verd').innerHTML=`<span class="verdict v-${d.defects.length?'FAIL':'PASS'}">${d.defects.length?'FAIL':'PASS'}</span>`;
- $('#dets').innerHTML=d.defects.length?d.defects.map(x=>`<div class="det"><span>${x.class}</span><span>${(x.confidence*100).toFixed(0)}%</span></div>`).join(''):'<span class="hint">no defects found</span>'}
+function draw(src,d){const BOX=V('--flag');cnv.width=d.width;cnv.height=d.height;cnv.hidden=false;$('#hint').hidden=true;ctx.drawImage(src,0,0,d.width,d.height);const lw=Math.max(2,d.width/250),fs=Math.max(12,d.width/45);ctx.lineWidth=lw;ctx.font=`500 ${fs}px Archivo, sans-serif`;
+ d.defects.forEach(x=>{const[a,b,c,e]=x.box,t=`${x.class} ${Math.round(x.confidence*100)}%`;ctx.strokeStyle=BOX;ctx.strokeRect(a,b,c-a,e-b);ctx.fillStyle=BOX;const ty=b-fs-6<0?b+fs+6:b-4;ctx.fillRect(a,ty-fs-2,ctx.measureText(t).width+10,fs+6);ctx.fillStyle='#fff';ctx.fillText(t,a+5,ty)});
+ $('#verd').innerHTML=`<div class="vbig ${d.defects.length?'FAIL':'PASS'}">${d.defects.length?'Fail':'Pass'}</div>`;
+ $('#dets').innerHTML=d.defects.length?d.defects.map(x=>`<div class="det"><span>${x.class}</span><b>${Math.round(x.confidence*100)}%</b><i style="width:${x.confidence*100}%"></i></div>`).join(''):'<span class="hint">No defects found.</span>';
+ fit($('#inspframe'),d.width,d.height)}
 async function post(url,blob){const fd=new FormData();fd.append('file',blob,blob.name||'frame.jpg');const r=await fetch(url,{method:'POST',body:fd});if(!r.ok)throw new Error(await r.text());return r.json()}
-async function inspectFile(f){stopCam();lastFile=f;try{const t0=performance.now(),d=await post('/api/inspect?conf='+$('#conf').value+'&source=upload',f);$('#ms').textContent=`model ${d.ms} ms · inspection #${d.id}`;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)}catch(e){$('#dets').textContent='Error: '+e.message}}
+async function inspectFile(f){stopCam();lastFile=f;try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=upload',f);$('#ms').textContent=`Model time ${d.ms} ms. Saved as inspection ${d.id}.`;const im=new Image();im.onload=()=>draw(im,d);im.src=URL.createObjectURL(f)}catch(e){$('#dets').textContent='This image could not be inspected: '+e.message}}
 $('#file').onchange=e=>e.target.files[0]&&inspectFile(e.target.files[0]);
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;clearInterval(timer);$('#cam').textContent='Start webcam'}}
-$('#cam').onclick=async()=>{if(stream)return stopCam();try{stream=await navigator.mediaDevices.getUserMedia({video:true})}catch(e){$('#dets').textContent='Webcam not available';return}
+$('#cam').onclick=async()=>{if(stream)return stopCam();try{stream=await navigator.mediaDevices.getUserMedia({video:true})}catch(e){$('#dets').textContent='No webcam is available in this browser.';return}
  vid.srcObject=stream;await vid.play();$('#cam').textContent='Stop webcam';
  timer=setInterval(async()=>{if(busy||!vid.videoWidth)return;busy=true;try{const c=document.createElement('canvas');c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext('2d').drawImage(vid,0,0);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));const d=await post('/predict?conf='+$('#conf').value,b);draw(c,d)}catch(e){}busy=false},600)};
-$('#brun').onclick=async()=>{const fs=[...$('#bfiles').files];if(!fs.length)return;$('#btab').innerHTML='<tr><th>file</th><th>verdict</th><th class="n">n</th><th class="n">ms</th></tr>';let f=0;
- for(let i=0;i<fs.length;i++){try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=batch',fs[i]);if(d.verdict==='FAIL')f++;$('#btab').insertAdjacentHTML('beforeend',`<tr><td class="mono">${fs[i].name.slice(0,30)}</td><td>${pill(d.verdict)}</td><td class="n">${d.defects.length}</td><td class="n">${d.ms}</td></tr>`)}catch(e){$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name}</td><td colspan=3>error</td></tr>`)}
-  $('#bp').style.width=((i+1)/fs.length*100)+'%';$('#bsum').textContent=`${i+1}/${fs.length} done · ${f} failed · ${i+1-f} passed`}};
+$('#brun').onclick=async()=>{const fs=[...$('#bfiles').files];if(!fs.length)return;$('#btab').innerHTML='<tr><th>File</th><th>Result</th><th class="n">Defects</th><th class="n">Time (ms)</th></tr>';let f=0;
+ for(let i=0;i<fs.length;i++){try{const d=await post('/api/inspect?conf='+$('#conf').value+'&source=batch',fs[i]);if(d.verdict==='FAIL')f++;$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name.slice(0,30)}</td><td>${chip(d.verdict)}</td><td class="n">${d.defects.length}</td><td class="n">${d.ms}</td></tr>`)}catch(e){$('#btab').insertAdjacentHTML('beforeend',`<tr><td>${fs[i].name}</td><td colspan=3>Could not be inspected</td></tr>`)}
+  $('#bp').style.width=((i+1)/fs.length*100)+'%';$('#bsum').textContent=`${i+1} of ${fs.length} done. ${f} failed and ${i+1-f} passed.`}};
 loadOverview();
 </script></body></html>

@@ -127,7 +127,9 @@ Of the 101 labelled defects, the model finds 86, misses 15, and raises 11 false 
 </tr>
 </table>
 
-The UI is a flat dark console with one accent colour, used only for FAIL verdicts and defect boxes.
+Three themes (Light, Blue, Dark) share one token system. Pixel rulers in source coordinates frame each photo, one red is used only for defects and FAIL, and a single variable font (Archivo) carries all the type.
+
+![Light, Blue and Dark themes](docs/themes.png)
 
 
 ---

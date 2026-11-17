@@ -12,17 +12,17 @@ def copy(src, dst):
 
 # 1) dashboard html, rewritten for static hosting
 h = (ROOT/"src"/"static"/"index.html").read_text(encoding="utf-8")
-for a, b in [('src="/api/thumb/${x.id}"', 'src="${THUMB(x.id)}"'), ('src="/errors/${e.file}"', 'src="errors/${e.file}"'),
-             ('src="/training/', 'src="training/'), ('href="/api/history.csv"', 'href="#csv"')]:
+for a, b in [("showImg('/api/thumb/'+r.dataset.id)", 'showImg(THUMB(r.dataset.id))'), ('src="/api/thumb/${x.id}"', 'src="${THUMB(x.id)}"'), ('src="/errors/${e.file}"', 'src="errors/${e.file}"'),
+             ('src="/training/', 'src="training/'), ('href="/api/history.csv"', 'href="#csv"'),]:
     assert a in h, a; h = h.replace(a, b)
-banner = ('<div class="note"><b>Static demo.</b> The detector runs in your browser (ONNX Runtime Web), so images stay on your device. '
-          'The log starts with 80 real validation predictions and resets on reload. '
-          '<a class="link" href="https://github.com/ammaran620-de/Febric-Defect">Source</a></div>')
+banner = ('<p class="note">Static demo. The detector runs in your browser, so images stay on your device. '
+          'The log starts with 80 real validation predictions and resets when you reload. '
+          '<a class="link" href="https://github.com/ammaran620-de/Febric-Defect">Source code</a></p>')
 h = h.replace("<main>", "<main>" + banner, 1)
 h = h.replace("<script>\nconst $=", '<script src="vendor/ort.wasm.min.js"></script>\n<script src="static-api.js"></script>\n<script>\nconst $=', 1)
 assert "static-api.js" in h
 (DOCS/"index.html").write_text(h, encoding="utf-8")
-copy(SITE/"static-api.js", DOCS/"static-api.js"); (DOCS/".nojekyll").write_text("")
+copy(SITE/"static-api.js", DOCS/"static-api.js"); copy(ROOT/"src"/"static"/"fonts"/"archivo.woff2", DOCS/"fonts"/"archivo.woff2"); (DOCS/".nojekyll").write_text("")
 
 # 2) runtime + model
 for f in ["ort.wasm.min.js", "ort-wasm-simd-threaded.mjs", "ort-wasm-simd-threaded.wasm"]: copy(ORT/f, DOCS/"vendor"/f)
