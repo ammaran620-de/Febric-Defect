@@ -40,7 +40,7 @@ On Windows, `run.bat` does the same. Then open http://localhost:8000. Run the te
 
 ## What it includes
 
-- Inspect one image or a webcam stream, and batch inspection of many images
+- Inspect one image, run a batch of images, or use the browser webcam preview (the preview is not saved to the log)
 - A SQLite log with CSV export, and a history page
 - A model page with metrics, a threshold sweep and a confusion matrix
 - An error-review page that shows ground truth next to each prediction
@@ -50,7 +50,7 @@ On Windows, `run.bat` does the same. Then open http://localhost:8000. Run the te
 
 - 400 public images, one train and validation split, no separate test set and no defect-free images. The real false-alarm rate is not measured.
 - Lab-style images with even lighting. Expect lower numbers on a real mill without retraining.
-- No login, no camera integration, and the Docker image has not been tested.
+- No login and no industrial camera integration (the webcam option is a browser preview only). The Docker image has not been tested.
 
 ## Data and licences
 
