@@ -1,0 +1,288 @@
+{
+  "yolo": {
+    "precision": 0.8866,
+    "recall": 0.8515,
+    "f1": 0.8687,
+    "tp": 86,
+    "fp": 11,
+    "fn": 15,
+    "duplicate_fp": 3
+  },
+  "baseline": {
+    "precision": 0.14,
+    "recall": 0.0693,
+    "f1": 0.0927,
+    "tp": 7,
+    "fp": 43,
+    "fn": 94
+  },
+  "yolo_class_aware": {
+    "precision": 0.866,
+    "recall": 0.8317,
+    "f1": 0.8485,
+    "tp": 84,
+    "fp": 13,
+    "fn": 17,
+    "wrong_class_fp": 4,
+    "duplicate_fp": 1
+  },
+  "yolo_class_aware_per_class": [
+    {
+      "class": "hole",
+      "precision": 0.8636,
+      "recall": 0.8261,
+      "f1": 0.8444,
+      "tp": 19,
+      "fp": 3,
+      "fn": 4
+    },
+    {
+      "class": "objects",
+      "precision": 0.8387,
+      "recall": 0.7879,
+      "f1": 0.8125,
+      "tp": 26,
+      "fp": 5,
+      "fn": 7
+    },
+    {
+      "class": "oil spot",
+      "precision": 0.95,
+      "recall": 0.95,
+      "f1": 0.95,
+      "tp": 19,
+      "fp": 1,
+      "fn": 1
+    },
+    {
+      "class": "thread error",
+      "precision": 0.8333,
+      "recall": 0.8,
+      "f1": 0.8163,
+      "tp": 20,
+      "fp": 4,
+      "fn": 5
+    }
+  ],
+  "evaluation": {
+    "images": 80,
+    "conf": 0.25,
+    "iou": 0.5,
+    "negative_images": 0,
+    "yolo_baseline": "class-agnostic localization: a box counts if it overlaps a labelled defect at IoU >= 0.5, class ignored",
+    "yolo_class_aware": "box must also name the labelled defect's class; a wrong-class box is a false positive and the defect stays a miss",
+    "caveat": "the validation split has no defect-free images, so a factory false-alarm rate is not measured"
+  },
+  "ultralytics_val": {
+    "precision": 0.8172,
+    "recall": 0.8272,
+    "mAP50": 0.88,
+    "mAP50-95": 0.5651
+  },
+  "note": "green=ground truth, red=YOLO prediction in results/errors",
+  "per_class": [
+    {
+      "class": "hole",
+      "precision": 0.791,
+      "recall": 0.825,
+      "map50": 0.839,
+      "map5095": 0.434
+    },
+    {
+      "class": "objects",
+      "precision": 0.753,
+      "recall": 0.83,
+      "map50": 0.861,
+      "map5095": 0.57
+    },
+    {
+      "class": "oil spot",
+      "precision": 0.87,
+      "recall": 0.95,
+      "map50": 0.985,
+      "map5095": 0.778
+    },
+    {
+      "class": "thread error",
+      "precision": 0.854,
+      "recall": 0.704,
+      "map50": 0.835,
+      "map5095": 0.479
+    }
+  ],
+  "class_counts": {
+    "train": {
+      "hole": 89,
+      "objects": 90,
+      "oil spot": 100,
+      "thread error": 108
+    },
+    "val": {
+      "hole": 23,
+      "objects": 33,
+      "oil spot": 20,
+      "thread error": 25
+    }
+  },
+  "images": {
+    "train": 320,
+    "val": 80
+  },
+  "sweep": [
+    {
+      "conf": 0.1,
+      "precision": 0.6917,
+      "recall": 0.9109,
+      "f1": 0.7863,
+      "tp": 92,
+      "fp": 41,
+      "fn": 9
+    },
+    {
+      "conf": 0.15,
+      "precision": 0.7826,
+      "recall": 0.8911,
+      "f1": 0.8333,
+      "tp": 90,
+      "fp": 25,
+      "fn": 11
+    },
+    {
+      "conf": 0.2,
+      "precision": 0.8544,
+      "recall": 0.8713,
+      "f1": 0.8627,
+      "tp": 88,
+      "fp": 15,
+      "fn": 13
+    },
+    {
+      "conf": 0.25,
+      "precision": 0.8866,
+      "recall": 0.8515,
+      "f1": 0.8687,
+      "tp": 86,
+      "fp": 11,
+      "fn": 15
+    },
+    {
+      "conf": 0.3,
+      "precision": 0.9231,
+      "recall": 0.8317,
+      "f1": 0.875,
+      "tp": 84,
+      "fp": 7,
+      "fn": 17
+    },
+    {
+      "conf": 0.35,
+      "precision": 0.9302,
+      "recall": 0.7921,
+      "f1": 0.8556,
+      "tp": 80,
+      "fp": 6,
+      "fn": 21
+    },
+    {
+      "conf": 0.4,
+      "precision": 0.9518,
+      "recall": 0.7822,
+      "f1": 0.8587,
+      "tp": 79,
+      "fp": 4,
+      "fn": 22
+    },
+    {
+      "conf": 0.45,
+      "precision": 0.9512,
+      "recall": 0.7723,
+      "f1": 0.8525,
+      "tp": 78,
+      "fp": 4,
+      "fn": 23
+    },
+    {
+      "conf": 0.5,
+      "precision": 0.9589,
+      "recall": 0.6931,
+      "f1": 0.8046,
+      "tp": 70,
+      "fp": 3,
+      "fn": 31
+    },
+    {
+      "conf": 0.55,
+      "precision": 0.9701,
+      "recall": 0.6436,
+      "f1": 0.7738,
+      "tp": 65,
+      "fp": 2,
+      "fn": 36
+    },
+    {
+      "conf": 0.6,
+      "precision": 0.9833,
+      "recall": 0.5842,
+      "f1": 0.7329,
+      "tp": 59,
+      "fp": 1,
+      "fn": 42
+    },
+    {
+      "conf": 0.65,
+      "precision": 0.9811,
+      "recall": 0.5149,
+      "f1": 0.6753,
+      "tp": 52,
+      "fp": 1,
+      "fn": 49
+    },
+    {
+      "conf": 0.7,
+      "precision": 0.9787,
+      "recall": 0.4554,
+      "f1": 0.6216,
+      "tp": 46,
+      "fp": 1,
+      "fn": 55
+    },
+    {
+      "conf": 0.75,
+      "precision": 0.9756,
+      "recall": 0.396,
+      "f1": 0.5634,
+      "tp": 40,
+      "fp": 1,
+      "fn": 61
+    },
+    {
+      "conf": 0.8,
+      "precision": 1.0,
+      "recall": 0.3366,
+      "f1": 0.5037,
+      "tp": 34,
+      "fp": 0,
+      "fn": 67
+    },
+    {
+      "conf": 0.85,
+      "precision": 1.0,
+      "recall": 0.2178,
+      "f1": 0.3577,
+      "tp": 22,
+      "fp": 0,
+      "fn": 79
+    },
+    {
+      "conf": 0.9,
+      "precision": 1.0,
+      "recall": 0.1584,
+      "f1": 0.2735,
+      "tp": 16,
+      "fp": 0,
+      "fn": 85
+    }
+  ],
+  "dataset": "TILDA-400 subset",
+  "model": "YOLOv8n (COCO-pretrained, 40 epochs, 416 px)"
+}

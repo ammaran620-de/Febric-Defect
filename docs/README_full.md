@@ -432,10 +432,13 @@ Training from scratch was tried first and failed (mAP@0.5 of 0.18 on 400 images)
 
 ### 11.3 Evaluation protocol
 
-- A prediction counts as a true positive when its IoU with an unmatched ground-truth box of the same class is at least **0.5**.
+- Matching is greedy by falling confidence, and each labelled defect can be matched once, so a second box on the same defect is a duplicate false positive. The IoU and confidence cut-offs are inclusive (`src/metrics.py`, tested in `tests/test_metrics.py`).
+- **Class-agnostic localization** (the headline table, and the only fair comparison with the OpenCV baseline): a prediction is a true positive when its IoU with an unmatched labelled defect is at least **0.5**. The predicted class is ignored.
+- **Class-aware** (YOLOv8n only): the labelled defect must also have the same class. A right-place wrong-class box is a false positive and leaves the defect as a miss.
 - Precision, recall and F1 are computed at a fixed confidence of **0.25**.
 - mAP@0.5 and mAP@0.5:0.95 come from the Ultralytics validator on the same split.
-- The **same** images and matching rule are used for the YOLO model and the OpenCV baseline, so the comparison is like for like.
+- The **same** images and the class-agnostic matching rule are used for the YOLO model and the OpenCV baseline, so that comparison is like for like. The class-aware score has no baseline counterpart.
+- The validation split contains no defect-free images, so none of these figures is a false-alarm rate on good fabric.
 
 ### 11.4 Baseline
 
@@ -447,10 +450,16 @@ Training from scratch was tried first and failed (mAP@0.5 of 0.18 on 400 images)
 
 ### 12.1 Overall
 
-| | Precision | Recall | F1 | TP | FP | FN |
+| Class-agnostic localization (class ignored) | Precision | Recall | F1 | TP | FP | FN |
 |---|---:|---:|---:|---:|---:|---:|
 | YOLOv8n (conf 0.25) | 0.887 | 0.852 | 0.869 | 86 | 11 | 15 |
 | OpenCV baseline | 0.140 | 0.069 | 0.093 | 7 | 43 | 94 |
+
+| Class-aware (class must match, YOLOv8n only) | Precision | Recall | F1 | TP | FP | FN |
+|---|---:|---:|---:|---:|---:|---:|
+| YOLOv8n (conf 0.25) | 0.866 | 0.832 | 0.849 | 84 | 13 | 17 |
+
+Of the 13 class-aware false positives, 4 are boxes in the right place with the wrong class and 1 is a duplicate. Class-aware counts per class (true positives, false positives, misses): hole 19, 3, 4; objects 26, 5, 7; oil spot 19, 1, 1; thread error 20, 4, 5.
 
 Ultralytics validator: precision 0.817, recall 0.827, mAP@0.5 0.880, mAP@0.5:0.95 0.565. These differ slightly from the table above because the validator averages over its own confidence curve while the table uses a single fixed threshold.
 
@@ -463,7 +472,7 @@ Ultralytics validator: precision 0.817, recall 0.827, mAP@0.5 0.880, mAP@0.5:0.9
 | oil spot | 0.87 | 0.95 | 0.985 | 0.78 |
 | thread error | 0.85 | 0.70 | 0.835 | 0.48 |
 
-Oil spots score highest on every metric. Thread errors have the lowest recall, and holes the lowest mAP@0.5:0.95. A plausible reason is that thread errors are thin and holes are small, though this was not tested directly.
+These per-class figures come from the Ultralytics validator at its own operating point, not at the fixed 0.25 threshold used in 12.1. Oil spots score highest on every metric. In the validator's numbers thread errors have the lowest recall, and holes the lowest mAP@0.5:0.95; at the fixed 0.25 threshold with the class required, objects have the most misses (7 of 33) and thread errors 5 of 25, so which class is weakest depends on the operating point. A plausible reason is that thread errors are thin and holes are small, though this was not tested directly.
 
 ### 12.3 Confidence threshold sweep
 
@@ -488,7 +497,7 @@ At the default threshold the model misses **15** of 101 defects and raises **11*
 
 What the numbers support:
 
-- **Thread errors have the lowest recall** (0.70), consistent with thin defects that resemble normal weave.
+- **Thread errors have the lowest per-class recall in the validator's numbers** (0.70); at the fixed 0.25 threshold with the class required, objects have slightly more misses (7 of 33 against 5 of 25), so treat the weakest class as unsettled on 80 images. Thin defects resembling normal weave remain a plausible reason for thread errors, but it was not tested.
 - **Holes have the weakest box tightness** (mAP@0.5:0.95 of 0.43), so they are found more reliably than they are precisely outlined.
 - A prediction at the right place but IoU just under 0.5 counts as both a miss and a false alarm, so some of the 26 errors may be correct detections with loose boxes. Check the Error review page to judge which.
 

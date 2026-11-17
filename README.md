@@ -16,16 +16,31 @@ The live demo runs the model in your browser with ONNX Runtime. Nothing is uploa
 
 ## Results
 
-Held-out validation set: 80 images, 101 labelled defects, 4 classes (hole, objects, oil spot, thread error). Confidence 0.25, IoU 0.5.
+Validation set: 80 images, 101 labelled defects, 4 classes (hole, objects, oil spot, thread error). Confidence 0.25, IoU 0.5. These are two different scores; do not mix them.
+
+**Class-agnostic localization.** A box counts if it overlaps a labelled defect, whatever class it names. This is the only scoring the OpenCV baseline can take part in, because it predicts no class, so it is the fair comparison.
 
 | | YOLOv8n | OpenCV baseline |
 |---|---:|---:|
 | Precision | 0.887 | 0.140 |
 | Recall | 0.852 | 0.069 |
 | F1 | 0.869 | 0.093 |
-| mAP50 | 0.880 | n/a |
+| True positives, false positives, misses | 86, 11, 15 | 7, 43, 94 |
 
-The model finds 86 of 101 defects, misses 15 and raises 11 false alarms. Thread errors are missed most often (recall 0.70). At confidence 0.55, precision rises to 0.97 and recall drops to 0.64. The baseline is a simple blur and threshold, so it shows that a learned model helps, not that this is state of the art.
+**Class-aware (YOLOv8n only).** The box must also name the labelled defect's class. A box in the right place with the wrong class is a false positive and the defect stays a miss.
+
+| | YOLOv8n |
+|---|---:|
+| Precision | 0.866 |
+| Recall | 0.832 |
+| F1 | 0.848 |
+| True positives, false positives, misses | 84, 13, 17 |
+
+Four of the 13 class-aware false positives are boxes in the right place with the wrong class. The Ultralytics validator reports mAP50 0.880 (which does require the class). Per-class counts are in `results/summary.json`.
+
+At the class-agnostic score the model finds 86 of 101 defects. At confidence 0.55, class-agnostic precision rises to 0.97 and recall drops to 0.64. Which class is missed most depends on how you measure: the validator's per-class recall is lowest for thread errors (0.70), while at the fixed 0.25 threshold with the class required the misses are 4 of 23 holes, 7 of 33 objects, 1 of 20 oil spots and 5 of 25 thread errors. The baseline is a simple blur and threshold, so it shows that a learned model helps, not that this is state of the art.
+
+Two limits on these numbers. The `best.pt` checkpoint is the epoch Ultralytics kept for its best validation fitness, so it was chosen with these same 80 images in view, and the figures are likely a little optimistic. Every validation image contains at least one labelled defect, so none of these precision figures is a factory false-alarm rate on good fabric.
 
 ## Run it
 
@@ -55,7 +70,7 @@ On Windows, `run.bat` does the same. Then open http://localhost:8000. Run the te
 
 ## Data and licences
 
-The code is MIT. The images come from the TILDA textile database through a public subset that states no licence, so the dataset and the screenshots that show it are **not** covered by the MIT licence. YOLOv8 comes from Ultralytics (AGPL-3.0).
+The code is MIT. The images come from the TILDA textile database through a public subset that states no licence, so the dataset and the screenshots that show it are **not** covered by the MIT licence. YOLOv8 comes from Ultralytics (AGPL-3.0). The Archivo font used by the dashboard is under the SIL Open Font License 1.1 (notice in `docs/fonts/OFL.txt`).
 
 ## Author
 
